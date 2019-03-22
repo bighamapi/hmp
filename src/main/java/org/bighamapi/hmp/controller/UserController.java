@@ -1,6 +1,7 @@
 package org.bighamapi.hmp.controller;
 
 import org.bighamapi.hmp.entity.Result;
+import org.bighamapi.hmp.entity.StatusCode;
 import org.bighamapi.hmp.pojo.User;
 import org.bighamapi.hmp.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,19 +17,19 @@ public class UserController {
     @GetMapping("/{id}")
     public Result findById(@PathVariable  String id){
         User user = userService.findById(id);
-        return new Result();
+        return new Result(true, StatusCode.OK, "请求成功",user);
     }
 
     @PostMapping("/login")
     public Result login(User user){
 
 
-        return new Result();
+        return new Result(true, StatusCode.OK , "请求成功");
     }
     @PostMapping()
     public Result add(User user){
         userService.save(user);
-        return new Result();
+        return new Result(true, StatusCode.OK , "请求成功");
     }
     /**
      * 修改用户密码
@@ -40,7 +41,7 @@ public class UserController {
     public Result update(User user,@PathVariable String id){
         user.setId(id);
         userService.update(user);
-        return new Result();
+        return new Result(true, StatusCode.OK , "请求成功");
     }
 
 }

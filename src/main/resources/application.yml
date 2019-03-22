@@ -1,5 +1,5 @@
 server:
-  port: 8080
+  port: 9090
 spring:
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
@@ -11,3 +11,11 @@ spring:
     show-sql: true
     hibernate:
       ddl-auto: update
+      naming:
+        physical-strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect  #不加这句则默认为MyISAM引擎
+  thymeleaf:
+    #开发阶段，建议关闭thymeleaf的缓存
+    cache: false
+    #使用遗留的html5以去掉对html标签的校验
+    mode: LEGACYHTML5
