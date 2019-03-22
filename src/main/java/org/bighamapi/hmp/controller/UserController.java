@@ -26,6 +26,13 @@ public class UserController {
 
     @PostMapping("/login")
     public Result login(@RequestBody User user){
+        User user1 = userService.findByUsername(user.getUsername());
+        if(user1==null){
+            return new Result(false, StatusCode.LOGINERROR , "用户名密码错误");
+        }
+        if (!user1.getPassword().equals(user.getPassword())){
+            return new Result(false, StatusCode.LOGINERROR , "用户名密码错误");
+        }
         return new Result(true, StatusCode.OK , "请求成功");
     }
     @PostMapping()
