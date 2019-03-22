@@ -7,10 +7,10 @@ import javax.persistence.Table;
 import java.io.Serializable;
 
 @Entity
-@Table(name = "user")
+@Table(name = "hmp_user")
 public class User implements Serializable {
     @Id
-    @GeneratedValue
+    //@GeneratedValue
     private String id;
     private String username;
     private String password;

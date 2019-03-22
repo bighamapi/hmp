@@ -4,6 +4,7 @@ import org.bighamapi.hmp.entity.Result;
 import org.bighamapi.hmp.entity.StatusCode;
 import org.bighamapi.hmp.pojo.User;
 import org.bighamapi.hmp.service.UserService;
+import org.bighamapi.hmp.util.IdWorker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,6 +15,9 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private IdWorker idWorker;
+
     @GetMapping("/{id}")
     public Result findById(@PathVariable  String id){
         User user = userService.findById(id);
@@ -21,13 +25,12 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public Result login(User user){
-
-
+    public Result login(@RequestBody User user){
         return new Result(true, StatusCode.OK , "请求成功");
     }
     @PostMapping()
-    public Result add(User user){
+    public Result add(@RequestBody User user){
+        user.setId(idWorker.nextId()+"");
         userService.save(user);
         return new Result(true, StatusCode.OK , "请求成功");
     }
