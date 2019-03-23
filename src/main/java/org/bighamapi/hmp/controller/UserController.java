@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@CrossOrigin
 @RequestMapping("/user")
 public class UserController {
 
@@ -22,6 +23,10 @@ public class UserController {
     public Result findById(@PathVariable  String id){
         User user = userService.findById(id);
         return new Result(true, StatusCode.OK, "请求成功",user);
+    }
+    @GetMapping("/info")
+    public Result getInfo(){
+        return new Result(true, StatusCode.OK, "请求成功");
     }
 
     @PostMapping("/login")

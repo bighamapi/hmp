@@ -4,6 +4,7 @@ import java.util.Map;
 import org.bighamapi.hmp.entity.PageResult;
 import org.bighamapi.hmp.entity.Result;
 import org.bighamapi.hmp.entity.StatusCode;
+import org.bighamapi.hmp.util.IdWorker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -22,12 +23,14 @@ import org.bighamapi.hmp.service.ColumnService;
  *
  */
 @RestController
+@CrossOrigin
 @RequestMapping("/column")
 public class ColumnController {
 
 	@Autowired
 	private ColumnService columnService;
-	
+	@Autowired
+	private IdWorker idWorker;
 	/**
 	 * 查询全部数据
 	 * @return
@@ -77,6 +80,7 @@ public class ColumnController {
 	 */
 	@RequestMapping(method=RequestMethod.POST)
 	public Result add(@RequestBody Column column  ){
+		column.setId(idWorker.nextId()+"");
 		columnService.add(column);
 		return new Result(true,StatusCode.OK,"增加成功");
 	}

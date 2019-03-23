@@ -10,6 +10,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -133,12 +134,12 @@ public class ArticleService {
                 	predicateList.add(cb.like(root.get("id").as(String.class), "%"+(String)searchMap.get("id")+"%"));
                 }
                 // 专栏ID
-                if (searchMap.get("columnid")!=null && !"".equals(searchMap.get("columnid"))) {
+                if (searchMap.get("columnId")!=null && !"".equals(searchMap.get("columnId"))) {
                 	predicateList.add(cb.like(root.get("columnid").as(String.class), "%"+(String)searchMap.get("columnid")+"%"));
                 }
                 // 用户ID
                 if (searchMap.get("userId")!=null && !"".equals(searchMap.get("userId"))) {
-                	predicateList.add(cb.like(root.get("userid").as(String.class), "%"+(String)searchMap.get("userid")+"%"));
+                	predicateList.add(cb.like(root.get("userId").as(String.class), "%"+(String)searchMap.get("userid")+"%"));
                 }
                 // 标题
                 if (searchMap.get("title")!=null && !"".equals(searchMap.get("title"))) {
@@ -149,16 +150,16 @@ public class ArticleService {
                 	predicateList.add(cb.like(root.get("content").as(String.class), "%"+(String)searchMap.get("content")+"%"));
                 }
                 // 是否公开
-                if (searchMap.get("ispublic")!=null && !"".equals(searchMap.get("ispublic"))) {
-                	predicateList.add(cb.like(root.get("ispublic").as(String.class), "%"+(String)searchMap.get("ispublic")+"%"));
+                if (searchMap.get("isPublic")!=null && !"".equals(searchMap.get("isPublic"))) {
+                	predicateList.add(cb.like(root.get("isPublic").as(String.class), "%"+(String)searchMap.get("isPublic")+"%"));
                 }
                 // 是否置顶
                 if (searchMap.get("istop")!=null && !"".equals(searchMap.get("istop"))) {
-                	predicateList.add(cb.like(root.get("istop").as(String.class), "%"+(String)searchMap.get("istop")+"%"));
+                	predicateList.add(cb.like(root.get("isTop").as(String.class), "%"+(String)searchMap.get("isTop")+"%"));
                 }
                 // 所属频道
-                if (searchMap.get("channelid")!=null && !"".equals(searchMap.get("channelid"))) {
-                	predicateList.add(cb.like(root.get("channelid").as(String.class), "%"+(String)searchMap.get("channelid")+"%"));
+                if (searchMap.get("channelId")!=null && !"".equals(searchMap.get("channelId"))) {
+                	predicateList.add(cb.like(root.get("channelId").as(String.class), "%"+(String)searchMap.get("channelId")+"%"));
                 }
                 // URL
                 if (searchMap.get("url")!=null && !"".equals(searchMap.get("url"))) {
@@ -168,6 +169,10 @@ public class ArticleService {
                 if (searchMap.get("type")!=null && !"".equals(searchMap.get("type"))) {
                 	predicateList.add(cb.like(root.get("type").as(String.class), "%"+(String)searchMap.get("type")+"%"));
                 }
+                //时间
+				if(!StringUtils.isEmpty(searchMap.get("date_1"))&&!StringUtils.isEmpty(searchMap.get("date_2"))){
+
+				}
 				
 				return cb.and( predicateList.toArray(new Predicate[predicateList.size()]));
 			}

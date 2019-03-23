@@ -4,6 +4,7 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * 实体类
@@ -21,10 +22,10 @@ public class Article implements Serializable{
 	private String userId;//用户ID
 	private String title;//标题
 	private String content;//文章正文
-	private java.util.Date createtime;//发表日期
-	private java.util.Date updatetime;//修改日期
-	private String ispublic;//是否公开
-	private String istop;//是否置顶
+	private java.util.Date createTime;//发表日期
+	private java.util.Date updateTime;//修改日期
+	private String isPublic;//是否公开
+	private String isTop;//是否置顶
 	private Integer visits;//浏览量
 	private Integer comment;//评论数
 	private String channelId;//所属频道
@@ -69,36 +70,43 @@ public class Article implements Serializable{
 		this.content = content;
 	}
 
-
-	public java.util.Date getCreatetime() {		
-		return createtime;
-	}
-	public void setCreatetime(java.util.Date createtime) {
-		this.createtime = createtime;
+	public Date getCreateTime() {
+		return createTime;
 	}
 
-	public java.util.Date getUpdatetime() {		
-		return updatetime;
-	}
-	public void setUpdatetime(java.util.Date updatetime) {
-		this.updatetime = updatetime;
+	public void setCreateTime(Date createTime) {
+		this.createTime = createTime;
 	}
 
-	public String getIspublic() {		
-		return ispublic;
-	}
-	public void setIspublic(String ispublic) {
-		this.ispublic = ispublic;
+	public Date getUpdateTime() {
+		return updateTime;
 	}
 
-	public String getIstop() {		
-		return istop;
-	}
-	public void setIstop(String istop) {
-		this.istop = istop;
+	public void setUpdateTime(Date updateTime) {
+		this.updateTime = updateTime;
 	}
 
-	public Integer getVisits() {		
+	public String getIsPublic() {
+		return isPublic;
+	}
+
+	public void setIsPublic(String isPublic) {
+		this.isPublic = isPublic;
+	}
+
+	public String getIsTop() {
+		return isTop;
+	}
+
+	public void setIsTop(String isTop) {
+		this.isTop = isTop;
+	}
+
+	public void setChannelId(String channelId) {
+		this.channelId = channelId;
+	}
+
+	public Integer getVisits() {
 		return visits;
 	}
 	public void setVisits(Integer visits) {

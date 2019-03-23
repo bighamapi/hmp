@@ -1,7 +1,7 @@
 package org.bighamapi.hmp.controller;
-import java.util.List;
 import java.util.Map;
 
+import org.bighamapi.hmp.util.IdWorker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -24,12 +24,14 @@ import org.bighamapi.hmp.entity.StatusCode;
  */
 @RestController
 @RequestMapping("/channel")
+@CrossOrigin
 public class ChannelController {
 
 	@Autowired
 	private ChannelService channelService;
-	
-	
+
+	@Autowired
+	private IdWorker idWorker;
 	/**
 	 * 查询全部数据
 	 * @return
@@ -78,7 +80,8 @@ public class ChannelController {
 	 * @param channel
 	 */
 	@RequestMapping(method=RequestMethod.POST)
-	public Result add(@RequestBody Channel channel  ){
+	public Result add(@RequestBody Channel channel){
+		channel.setId(idWorker.nextId()+"");
 		channelService.add(channel);
 		return new Result(true,StatusCode.OK,"增加成功");
 	}

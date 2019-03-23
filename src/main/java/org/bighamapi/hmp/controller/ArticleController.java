@@ -5,6 +5,7 @@ import org.bighamapi.hmp.entity.Result;
 import org.bighamapi.hmp.entity.StatusCode;
 import org.bighamapi.hmp.pojo.Article;
 import org.bighamapi.hmp.service.ArticleService;
+import org.bighamapi.hmp.util.IdWorker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
@@ -17,11 +18,15 @@ import java.util.Map;
  *
  */
 @RestController
+@CrossOrigin
 @RequestMapping("/article")
 public class ArticleController {
 
 	@Autowired
 	private ArticleService articleService;
+
+	@Autowired
+	private IdWorker idWorker;
 	@PutMapping("/examine/{articleId}")
 	public Result updateState(@PathVariable String articleId){
 		articleService.updateState(articleId);
@@ -75,7 +80,8 @@ public class ArticleController {
 	 * @param article
 	 */
 	@RequestMapping(method=RequestMethod.POST)
-	public Result add(@RequestBody Article article  ){
+	public Result add(@RequestBody Article article ){
+		article.setId(idWorker.nextId()+"");
 		articleService.add(article);
 		return new Result(true,StatusCode.OK,"增加成功");
 	}
