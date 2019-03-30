@@ -8,6 +8,9 @@ import org.bighamapi.hmp.util.IdWorker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @RestController
 @CrossOrigin
 @RequestMapping("/user")
@@ -26,6 +29,11 @@ public class UserController {
     }
     @GetMapping("/info")
     public Result getInfo(){
+
+        return new Result(true, StatusCode.OK, "请求成功",userService.findByUsername("admin"));
+    }
+    @PostMapping("/layout")
+    public Result layout(){
         return new Result(true, StatusCode.OK, "请求成功");
     }
 
@@ -38,7 +46,9 @@ public class UserController {
         if (!user1.getPassword().equals(user.getPassword())){
             return new Result(false, StatusCode.LOGINERROR , "用户名密码错误");
         }
-        return new Result(true, StatusCode.OK , "请求成功");
+        Map<String,String> map = new HashMap<>();
+        map.put("token","admin");
+        return new Result(true, StatusCode.OK , "请求成功",map);
     }
     @PostMapping()
     public Result add(@RequestBody User user){
