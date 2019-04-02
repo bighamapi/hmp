@@ -1,10 +1,11 @@
 package org.bighamapi.hmp.pojo;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 /**
  * 实体类
@@ -13,19 +14,32 @@ import java.util.Date;
  */
 @Entity
 @Table(name="hmp_column")
+@JsonIgnoreProperties(ignoreUnknown = true, value =
+        {"hibernateLazyInitializer", "handler", "fieldHandler"})
 public class Column implements Serializable{
 
-	@Id
-	private String id;//ID
+    @Id
+    private String id;//ID
+
+    @OneToMany(cascade = {CascadeType.PERSIST,CascadeType.MERGE,CascadeType.DETACH},mappedBy = "column",fetch=FetchType.LAZY)
+    @JsonIgnoreProperties(ignoreUnknown = true, value = {"column"})
+    private List<Article> article;
 
 	private String name;//专栏名称
 	private String summary;//专栏简介
-	private java.util.Date createTime;//申请日期
+	private java.util.Date createTime;//创建日期
 	private java.util.Date updateTime;//更新日期
 	private String state;//状态
 
-	
-	public String getId() {		
+	public List<Article> getArticle() {
+		return article;
+	}
+
+	public void setArticle(List<Article> article) {
+		this.article = article;
+	}
+
+	public String getId() {
 		return id;
 	}
 	public void setId(String id) {

@@ -1,10 +1,11 @@
 package org.bighamapi.hmp.pojo;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 /**
  * 实体类
@@ -13,13 +14,22 @@ import java.util.Date;
  */
 @Entity
 @Table(name="hmp_article")
+@JsonIgnoreProperties(ignoreUnknown = true, value =
+{"hibernateLazyInitializer", "handler", "fieldHandler"})
 public class Article implements Serializable{
 
 	@Id
 	private String id;//ID
 
-	private String columnId;//专栏ID
-	private String userId;//用户ID
+	@ManyToOne(fetch=FetchType.LAZY)
+    @JsonIgnoreProperties(ignoreUnknown = true, value = {"article"})
+	private Column column;//专栏
+
+	@ManyToMany(cascade = {CascadeType.PERSIST,CascadeType.MERGE,CascadeType.DETACH},fetch=FetchType.LAZY)
+    @JsonIgnoreProperties(ignoreUnknown = true, value = {"article"})
+	private List<Channel> channel;//所属频道
+
+	private String username;//用户名
 	private String title;//标题
 	private String content;//文章正文
 	private java.util.Date createTime;//发表日期
@@ -28,9 +38,7 @@ public class Article implements Serializable{
 	private String isTop;//是否置顶
 	private Integer visits;//浏览量
 	private Integer comment;//评论数
-	private String channelId;//所属频道
 	private String url;//URL
-	private String type;//类型
 
 	
 	public String getId() {		
@@ -40,20 +48,20 @@ public class Article implements Serializable{
 		this.id = id;
 	}
 
-	public String getUserId() {
-		return userId;
+	public String getUsername() {
+		return username;
 	}
 
-	public void setUserId(String userId) {
-		this.userId = userId;
+	public void setUsername(String username) {
+		this.username = username;
 	}
 
-	public String getColumnId() {
-		return columnId;
+	public Column getColumn() {
+		return column;
 	}
 
-	public void setColumnId(String columnId) {
-		this.columnId = columnId;
+	public void setColumn(Column column) {
+		this.column = column;
 	}
 
 	public String getTitle() {
@@ -72,6 +80,14 @@ public class Article implements Serializable{
 
 	public Date getCreateTime() {
 		return createTime;
+	}
+
+	public List<Channel> getChannel() {
+		return channel;
+	}
+
+	public void setChannel(List<Channel> channel) {
+		this.channel = channel;
 	}
 
 	public void setCreateTime(Date createTime) {
@@ -102,9 +118,6 @@ public class Article implements Serializable{
 		this.isTop = isTop;
 	}
 
-	public void setChannelId(String channelId) {
-		this.channelId = channelId;
-	}
 
 	public Integer getVisits() {
 		return visits;
@@ -121,26 +134,11 @@ public class Article implements Serializable{
 		this.comment = comment;
 	}
 
-
-	public String getChannelId() {
-		return channelId;
-	}
-	public void setChannelid(String channelId) {
-		this.channelId = channelId;
-	}
-
 	public String getUrl() {		
 		return url;
 	}
 	public void setUrl(String url) {
 		this.url = url;
-	}
-
-	public String getType() {		
-		return type;
-	}
-	public void setType(String type) {
-		this.type = type;
 	}
 
 

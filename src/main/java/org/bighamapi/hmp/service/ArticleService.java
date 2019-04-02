@@ -2,6 +2,7 @@ package org.bighamapi.hmp.service;
 
 import org.bighamapi.hmp.dao.ArticleDao;
 import org.bighamapi.hmp.pojo.Article;
+import org.bighamapi.hmp.pojo.Channel;
 import org.bighamapi.hmp.util.IdWorker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -17,6 +18,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -38,6 +40,13 @@ public class ArticleService {
 
 	@Autowired
 	private RedisTemplate redisTemplate;
+	@Autowired
+	private UserService userService;
+	@Autowired
+	private ChannelService channelService;
+
+	@Autowired
+	private ColumnService columnService;
 
 	public void updateState(String id){
 		articleDao.updateState(id);
@@ -82,10 +91,10 @@ public class ArticleService {
 	 */
 	public Article findById(String id) {
 		//redis
-		Article article = (Article) redisTemplate.opsForValue().get("article_"+id);
+		Article article = null;//(Article) redisTemplate.opsForValue().get("article_"+id);
 		if(article == null){
 			article = articleDao.findById(id).get();
-			redisTemplate.opsForValue().set("article_"+id, article);
+			//redisTemplate.opsForValue().set("article_"+id, article);
 		}
 		return article;
 	}
@@ -96,6 +105,22 @@ public class ArticleService {
 	 */
 	public void add(Article article) {
 		article.setId( idWorker.nextId()+"" );
+		article.setCreateTime(new Date());
+		article.setUpdateTime(new Date());
+		if(userService.findByUsername(article.getUsername()) ==null){
+			throw new RuntimeException("用户不存在");
+		}
+
+		if(article.getColumn().getId() == null){
+			columnService.add(article.getColumn());
+		}
+		List<Channel> channels = article.getChannel();
+		for (Channel channel :channels) {
+			if (channel.getId()==null){
+				channelService.add(channel);
+			}
+		}
+
 		articleDao.save(article);
 	}
 
@@ -105,6 +130,7 @@ public class ArticleService {
 	 */
 	public void update(Article article) {
 		redisTemplate.delete("article"+article.getId());
+		article.setUpdateTime(new Date());
 		articleDao.save(article);
 	}
 
@@ -113,7 +139,7 @@ public class ArticleService {
 	 * @param id
 	 */
 	public void deleteById(String id) {
-		redisTemplate.delete("article"+id);
+//		redisTemplate.delete("article"+id);
 		articleDao.deleteById(id);
 	}
 

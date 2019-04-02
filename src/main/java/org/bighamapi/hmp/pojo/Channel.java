@@ -1,20 +1,35 @@
 package org.bighamapi.hmp.pojo;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import javax.persistence.*;
 import java.io.Serializable;
+import java.util.List;
+
 
 @Entity
 @Table(name="hmp_channel")
+@JsonIgnoreProperties(ignoreUnknown = true, value =
+{"hibernateLazyInitializer", "handler", "fieldHandler"})
 public class Channel implements Serializable {
 
     @Id
     private String id;//ID
 
+    @ManyToMany(cascade = {CascadeType.PERSIST,CascadeType.MERGE,CascadeType.DETACH},fetch=FetchType.LAZY,mappedBy = "channel")
+    @JsonIgnoreProperties(ignoreUnknown = true, value = {"channel"})
+    private List<Article> article;
     private String name;//频道名称
     private String state;//状态
 
+
+    public List<Article> getArticle() {
+        return article;
+    }
+
+    public void setArticle(List<Article> article) {
+        this.article = article;
+    }
 
     public String getId() {
         return id;

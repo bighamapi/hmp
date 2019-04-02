@@ -81,7 +81,6 @@ public class ArticleController {
 	 */
 	@RequestMapping(method=RequestMethod.POST)
 	public Result add(@RequestBody Article article ){
-		article.setId(idWorker.nextId()+"");
 		articleService.add(article);
 		return new Result(true,StatusCode.OK,"增加成功");
 	}

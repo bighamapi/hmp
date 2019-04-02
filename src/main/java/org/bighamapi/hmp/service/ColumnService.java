@@ -1,6 +1,7 @@
 package org.bighamapi.hmp.service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -82,6 +83,9 @@ public class ColumnService {
 	 */
 	public void add(Column column) {
 		column.setId( idWorker.nextId()+"" );
+		column.setCreateTime(new Date());
+		column.setUpdateTime(new Date());
+
 		columnDao.save(column);
 	}
 
@@ -90,6 +94,7 @@ public class ColumnService {
 	 * @param column
 	 */
 	public void update(Column column) {
+		column.setUpdateTime(new Date());
 		columnDao.save(column);
 	}
 

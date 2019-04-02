@@ -18,4 +18,4 @@ spring:
     #使用遗留的html5以去掉对html标签的校验
     mode: LEGACYHTML5
 #  redis:
-#    host: localhost
+#    host: 111.230.57.178
