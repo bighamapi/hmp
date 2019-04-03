@@ -17,10 +17,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 服务层
@@ -110,14 +107,23 @@ public class ArticleService {
 		if(userService.findByUsername(article.getUsername()) ==null){
 			throw new RuntimeException("用户不存在");
 		}
-
-		if(article.getColumn().getId() == null){
-			columnService.add(article.getColumn());
+		//如果有专栏，保存
+		if (article.getColumn()!=null){
+			Map<String,String> map = new HashMap<>();
+			map.put("name",article.getColumn().getName());
+			if((article.getColumn().getId() == null) && (columnService.findSearch(map) != null)){
+				columnService.add(article.getColumn());
+			}
 		}
-		List<Channel> channels = article.getChannel();
-		for (Channel channel :channels) {
-			if (channel.getId()==null){
-				channelService.add(channel);
+		//如果有频道，保存
+		if (article.getChannel()!=null){
+			List<Channel> channels = article.getChannel();
+			for (Channel channel :channels) {
+				Map<String,String> map = new HashMap<>();
+				map.put("name",channel.getName());
+				if (( channel.getId() == null ) && ( channelService.findSearch(map) != null )){
+					channelService.add(channel);
+				}
 			}
 		}
 
@@ -159,13 +165,13 @@ public class ArticleService {
                 if (searchMap.get("id")!=null && !"".equals(searchMap.get("id"))) {
                 	predicateList.add(cb.like(root.get("id").as(String.class), "%"+(String)searchMap.get("id")+"%"));
                 }
-                // 专栏ID
-                if (searchMap.get("columnId")!=null && !"".equals(searchMap.get("columnId"))) {
-                	predicateList.add(cb.like(root.get("columnid").as(String.class), "%"+(String)searchMap.get("columnid")+"%"));
+                // 专栏
+                if (searchMap.get("column")!=null && !"".equals(searchMap.get("column"))) {
+                	predicateList.add(cb.like(root.get("column").as(String.class), "%"+(String)searchMap.get("column")+"%"));
                 }
-                // 用户ID
-                if (searchMap.get("userId")!=null && !"".equals(searchMap.get("userId"))) {
-                	predicateList.add(cb.like(root.get("userId").as(String.class), "%"+(String)searchMap.get("userid")+"%"));
+                // 用户名
+                if (searchMap.get("username")!=null && !"".equals(searchMap.get("username"))) {
+                	predicateList.add(cb.like(root.get("username").as(String.class), "%"+(String)searchMap.get("username")+"%"));
                 }
                 // 标题
                 if (searchMap.get("title")!=null && !"".equals(searchMap.get("title"))) {
@@ -180,20 +186,16 @@ public class ArticleService {
                 	predicateList.add(cb.like(root.get("isPublic").as(String.class), "%"+(String)searchMap.get("isPublic")+"%"));
                 }
                 // 是否置顶
-                if (searchMap.get("istop")!=null && !"".equals(searchMap.get("istop"))) {
+                if (searchMap.get("isTop")!=null && !"".equals(searchMap.get("isTop"))) {
                 	predicateList.add(cb.like(root.get("isTop").as(String.class), "%"+(String)searchMap.get("isTop")+"%"));
                 }
                 // 所属频道
-                if (searchMap.get("channelId")!=null && !"".equals(searchMap.get("channelId"))) {
-                	predicateList.add(cb.like(root.get("channelId").as(String.class), "%"+(String)searchMap.get("channelId")+"%"));
+                if (searchMap.get("channel")!=null && !"".equals(searchMap.get("channel"))) {
+                	predicateList.add(cb.like(root.get("channel").as(String.class), "%"+(String)searchMap.get("channel")+"%"));
                 }
                 // URL
                 if (searchMap.get("url")!=null && !"".equals(searchMap.get("url"))) {
                 	predicateList.add(cb.like(root.get("url").as(String.class), "%"+(String)searchMap.get("url")+"%"));
-                }
-                // 类型
-                if (searchMap.get("type")!=null && !"".equals(searchMap.get("type"))) {
-                	predicateList.add(cb.like(root.get("type").as(String.class), "%"+(String)searchMap.get("type")+"%"));
                 }
                 //时间
 				if(!StringUtils.isEmpty(searchMap.get("date_1"))&&!StringUtils.isEmpty(searchMap.get("date_2"))){

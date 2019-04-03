@@ -14,8 +14,7 @@ import java.util.List;
  */
 @Entity
 @Table(name="hmp_article")
-@JsonIgnoreProperties(ignoreUnknown = true, value =
-{"hibernateLazyInitializer", "handler", "fieldHandler"})
+@JsonIgnoreProperties(ignoreUnknown = true, value = {"hibernateLazyInitializer", "handler", "fieldHandler"})
 public class Article implements Serializable{
 
 	@Id
@@ -25,7 +24,7 @@ public class Article implements Serializable{
     @JsonIgnoreProperties(ignoreUnknown = true, value = {"article"})
 	private Column column;//专栏
 
-	@ManyToMany(cascade = {CascadeType.PERSIST,CascadeType.MERGE,CascadeType.DETACH},fetch=FetchType.LAZY)
+	@ManyToMany(cascade = {CascadeType.MERGE,CascadeType.DETACH},fetch=FetchType.LAZY)
     @JsonIgnoreProperties(ignoreUnknown = true, value = {"article"})
 	private List<Channel> channel;//所属频道
 
@@ -37,8 +36,12 @@ public class Article implements Serializable{
 	private String isPublic;//是否公开
 	private String isTop;//是否置顶
 	private Integer visits;//浏览量
-	private Integer comment;//评论数
+	private Integer comments;//评论数
 	private String url;//URL
+
+	@OneToMany(cascade = {CascadeType.MERGE,CascadeType.DETACH},mappedBy = "article")
+	@JsonIgnoreProperties(ignoreUnknown = true, value = {"article"})
+	private List<Comment> comment;//评论
 
 	
 	public String getId() {		
@@ -127,11 +130,11 @@ public class Article implements Serializable{
 	}
 
 
-	public Integer getComment() {		
-		return comment;
+	public Integer getComments() {
+		return comments;
 	}
-	public void setComment(Integer comment) {
-		this.comment = comment;
+	public void setComments(Integer comments) {
+		this.comments = comments;
 	}
 
 	public String getUrl() {		
@@ -141,6 +144,11 @@ public class Article implements Serializable{
 		this.url = url;
 	}
 
+	public List<Comment> getComment() {
+		return comment;
+	}
 
-	
+	public void setComment(List<Comment> comment) {
+		this.comment = comment;
+	}
 }

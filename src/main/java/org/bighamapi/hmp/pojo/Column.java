@@ -21,7 +21,7 @@ public class Column implements Serializable{
     @Id
     private String id;//ID
 
-    @OneToMany(cascade = {CascadeType.PERSIST,CascadeType.MERGE,CascadeType.DETACH},mappedBy = "column",fetch=FetchType.LAZY)
+    @OneToMany(cascade = {CascadeType.MERGE,CascadeType.DETACH},mappedBy = "column",fetch=FetchType.LAZY)
     @JsonIgnoreProperties(ignoreUnknown = true, value = {"column"})
     private List<Article> article;
 
