@@ -2,6 +2,7 @@ package org.bighamapi.hmp.service;
 
 import org.bighamapi.hmp.dao.ColumnDao;
 import org.bighamapi.hmp.dao.CommentDao;
+import org.bighamapi.hmp.pojo.Article;
 import org.bighamapi.hmp.pojo.Column;
 import org.bighamapi.hmp.pojo.Comment;
 import org.bighamapi.hmp.util.IdWorker;
@@ -120,26 +121,26 @@ public class CommentService {
 			@Override
 			public Predicate toPredicate(Root<Comment> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
 				List<Predicate> predicateList = new ArrayList<Predicate>();
-                //
-                if (searchMap.get("id")!=null && !"".equals(searchMap.get("id"))) {
-                	predicateList.add(cb.like(root.get("id").as(String.class), "%"+(String)searchMap.get("id")+"%"));
-                }
-                //
-                if (searchMap.get("nickname")!=null && !"".equals(searchMap.get("nickname"))) {
-                	predicateList.add(cb.like(root.get("nickname").as(String.class), "%"+(String)searchMap.get("nickname")+"%"));
-                }
-                //
-                if (searchMap.get("content")!=null && !"".equals(searchMap.get("content"))) {
-                	predicateList.add(cb.like(root.get("content").as(String.class), "%"+(String)searchMap.get("content")+"%"));
-                }
-                //
-                if (searchMap.get("email")!=null && !"".equals(searchMap.get("email"))) {
-                	predicateList.add(cb.like(root.get("email").as(String.class), "%"+(String)searchMap.get("email")+"%"));
-                }
-                if (searchMap.get("parentId")!=null && !"".equals(searchMap.get("parentId"))) {
-                	predicateList.add(cb.like(root.get("parentId").as(String.class), "%"+(String)searchMap.get("parentId")+"%"));
-                }
-
+                if (searchMap!= null) {
+					if (searchMap.get("id") != null && !"".equals(searchMap.get("id"))) {
+						predicateList.add(cb.like(root.get("id").as(String.class), "%" + (String) searchMap.get("id") + "%"));
+					}
+					//
+					if (searchMap.get("nickname") != null && !"".equals(searchMap.get("nickname"))) {
+						predicateList.add(cb.like(root.get("nickname").as(String.class), "%" + (String) searchMap.get("nickname") + "%"));
+					}
+					//
+					if (searchMap.get("content") != null && !"".equals(searchMap.get("content"))) {
+						predicateList.add(cb.like(root.get("content").as(String.class), "%" + (String) searchMap.get("content") + "%"));
+					}
+					//
+					if (searchMap.get("email") != null && !"".equals(searchMap.get("email"))) {
+						predicateList.add(cb.like(root.get("email").as(String.class), "%" + (String) searchMap.get("email") + "%"));
+					}
+					if (searchMap.get("parentId") != null && !"".equals(searchMap.get("parentId"))) {
+						predicateList.add(cb.like(root.get("parentId").as(String.class), "%" + (String) searchMap.get("parentId") + "%"));
+					}
+				}
 				return cb.and( predicateList.toArray(new Predicate[predicateList.size()]));
 
 			}

@@ -25,8 +25,6 @@ public class ArticleController {
 	@Autowired
 	private ArticleService articleService;
 
-	@Autowired
-	private IdWorker idWorker;
 	@PutMapping("/examine/{articleId}")
 	public Result updateState(@PathVariable String articleId){
 		articleService.updateState(articleId);
@@ -51,7 +49,6 @@ public class ArticleController {
 		return new Result(true,StatusCode.OK,"查询成功",articleService.findById(id));
 	}
 
-
 	/**
 	 * 分页+多条件查询
 	 * @param searchMap 查询条件封装
@@ -60,7 +57,7 @@ public class ArticleController {
 	 * @return 分页结果
 	 */
 	@RequestMapping(value="/search/{page}/{size}",method=RequestMethod.POST)
-	public Result findSearch(@RequestBody Map searchMap , @PathVariable int page, @PathVariable int size){
+	public Result findSearch(@RequestBody(required=false) Map searchMap , @PathVariable int page, @PathVariable int size){
 		Page<Article> pageList = articleService.findSearch(searchMap, page, size);
 		return  new Result(true,StatusCode.OK,"查询成功",  new PageResult<Article>(pageList.getTotalElements(), pageList.getContent()) );
 	}
