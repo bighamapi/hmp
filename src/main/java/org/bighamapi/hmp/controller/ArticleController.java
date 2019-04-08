@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.Map;
 
 /**
@@ -57,7 +58,7 @@ public class ArticleController {
 	 * @return 分页结果
 	 */
 	@RequestMapping(value="/search/{page}/{size}",method=RequestMethod.POST)
-	public Result findSearch(@RequestBody(required=false) Map searchMap , @PathVariable int page, @PathVariable int size){
+	public Result findSearch(@RequestBody(required=false) Map<String,Object> searchMap , @PathVariable int page, @PathVariable int size){
 		Page<Article> pageList = articleService.findSearch(searchMap, page, size);
 		return  new Result(true,StatusCode.OK,"查询成功",  new PageResult<Article>(pageList.getTotalElements(), pageList.getContent()) );
 	}

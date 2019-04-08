@@ -3,6 +3,7 @@ package org.bighamapi.hmp.service;
 import org.bighamapi.hmp.dao.ArticleDao;
 import org.bighamapi.hmp.pojo.Article;
 import org.bighamapi.hmp.pojo.Channel;
+import org.bighamapi.hmp.pojo.Column;
 import org.bighamapi.hmp.pojo.Comment;
 import org.bighamapi.hmp.util.IdWorker;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -106,31 +107,7 @@ public class ArticleService {
 	public void add(Article article) {
 		article.setId( idWorker.nextId()+"" );
 		article.setCreateTime(new Date());
-		article.setUpdateTime(new Date());
-		if(userService.findByUsername(article.getUsername()) ==null){
-			throw new RuntimeException("用户不存在");
-		}
-		//如果有专栏，保存
-		if (article.getColumn()!=null){
-			Map<String,String> map = new HashMap<>();
-			map.put("name",article.getColumn().getName());
-			if((article.getColumn().getId() == null) && (columnService.findSearch(map) != null)){
-				columnService.add(article.getColumn());
-			}
-		}
-		//如果有频道，保存
-		if (article.getChannel()!=null){
-			List<Channel> channels = article.getChannel();
-			for (Channel channel :channels) {
-				Map<String,String> map = new HashMap<>();
-				map.put("name",channel.getName());
-				if (( channel.getId() == null ) && ( channelService.findSearch(map) != null )){
-					channelService.add(channel);
-				}
-			}
-		}
-
-		articleDao.save(article);
+		this.update(article);
 	}
 
 	/**
@@ -138,8 +115,44 @@ public class ArticleService {
 	 * @param article
 	 */
 	public void update(Article article) {
-		redisTemplate.delete("article"+article.getId());
+		//redisTemplate.delete("article"+article.getId());
 		article.setUpdateTime(new Date());
+		if(userService.findByUsername(article.getUsername()) ==null){
+			throw new RuntimeException("用户不存在");
+		}
+		//如果有专栏属性，保存
+		if (article.getColumn()!=null){
+			Map<String,String> map = new HashMap<>();
+			map.put("name",article.getColumn().getName());
+			Column column = columnService.findSearch(map).get(0);
+			if((article.getColumn().getId() == null) && (column == null)){
+				columnService.add(article.getColumn());
+			}else{
+				article.setColumn(column);
+			}
+		}
+		//如果有频道属性，保存
+		if (article.getChannel()!=null){
+			List<Channel> channels = article.getChannel();
+			List<Channel> oldChannels = new ArrayList<>();
+			Iterator<Channel> iterator = channels.iterator();
+			while (iterator.hasNext()) {
+				Channel channel = iterator.next();
+				Map<String,String> map = new HashMap<>();
+				map.put("name",channel.getName());
+
+				List<Channel> channel1 = channelService.findSearch(map);
+				if (( channel.getId() == null ) && ( channel1.isEmpty() )){
+					channelService.add(channel);
+				}else{
+					//删掉重复的频道
+					iterator.remove();
+					//添加已有的频道到oldChannels
+					oldChannels.add(channel1.get(0));
+				}
+			}
+			channels.addAll(oldChannels);
+		}
 		articleDao.save(article);
 	}
 
@@ -192,11 +205,11 @@ public class ArticleService {
 					}
 					// 是否公开
 					if (searchMap.get("isPublic") != null && !"".equals(searchMap.get("isPublic"))) {
-						predicateList.add(cb.like(root.get("isPublic").as(String.class), "%" + (String) searchMap.get("isPublic") + "%"));
+						predicateList.add(cb.like(root.get("isPublic").as(String.class), "%" + String.valueOf(searchMap.get("isPublic")) + "%"));
 					}
 					// 是否置顶
 					if (searchMap.get("isTop") != null && !"".equals(searchMap.get("isTop"))) {
-						predicateList.add(cb.like(root.get("isTop").as(String.class), "%" + (String) searchMap.get("isTop") + "%"));
+						predicateList.add(cb.like(root.get("isTop").as(String.class), "%" + String.valueOf(searchMap.get("isTop")) + "%"));
 					}
 					// 所属频道
 					if (searchMap.get("channel") != null && !"".equals(searchMap.get("channel"))) {
