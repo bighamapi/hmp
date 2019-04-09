@@ -49,9 +49,6 @@ public class ArticleService {
 	@Autowired
 	private CommentService commentService;
 
-	public void updateState(String id){
-		articleDao.updateState(id);
-	}
 	/**
 	 * 查询全部列表
 	 * @return
@@ -100,6 +97,9 @@ public class ArticleService {
 		return article;
 	}
 
+	public List<Article> findByVisits(int num) {
+		return articleDao.findByVisits(num);
+	}
 	/**
 	 * 增加
 	 * @param article
@@ -107,6 +107,7 @@ public class ArticleService {
 	public void add(Article article) {
 		article.setId( idWorker.nextId()+"" );
 		article.setCreateTime(new Date());
+		article.setIsTop("false");
 		this.update(article);
 	}
 
@@ -229,5 +230,4 @@ public class ArticleService {
 		};
 
 	}
-
 }

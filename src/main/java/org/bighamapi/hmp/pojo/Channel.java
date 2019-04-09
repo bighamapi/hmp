@@ -16,7 +16,7 @@ public class Channel implements Serializable {
     @Id
     private String id;//ID
 
-    @ManyToMany(cascade = {CascadeType.MERGE,CascadeType.DETACH},fetch=FetchType.LAZY,mappedBy = "channel")
+    @ManyToMany(cascade = CascadeType.DETACH,fetch=FetchType.LAZY,mappedBy = "channel")
     @JsonIgnoreProperties(ignoreUnknown = true, value = {"channel"})
     private List<Article> article;
     private String name;//频道名称

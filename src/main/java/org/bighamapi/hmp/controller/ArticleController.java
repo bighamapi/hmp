@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
+import javax.websocket.server.PathParam;
 import java.util.Date;
 import java.util.Map;
 
@@ -26,11 +27,6 @@ public class ArticleController {
 	@Autowired
 	private ArticleService articleService;
 
-	@PutMapping("/examine/{articleId}")
-	public Result updateState(@PathVariable String articleId){
-		articleService.updateState(articleId);
-		return new Result(true,StatusCode.OK,"审核成功");
-	}
 	/**
 	 * 查询全部数据
 	 * @return
@@ -72,7 +68,16 @@ public class ArticleController {
     public Result findSearch( @RequestBody Map searchMap){
         return new Result(true,StatusCode.OK,"查询成功",articleService.findSearch(searchMap));
     }
-	
+
+	/**
+	 * 根据visits来降序查找
+	 * @param num 需要的数量
+	 * @return LIST
+	 */
+	@GetMapping("/visits/{num}")
+    public Result findByVisits(@PathVariable int num){
+		return new Result(true,StatusCode.OK,"查询成功",articleService.findByVisits(num));
+	}
 	/**
 	 * 增加
 	 * @param article
