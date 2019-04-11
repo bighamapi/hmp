@@ -106,6 +106,8 @@ public class ArticleService {
 	 */
 	public void add(Article article) {
 		article.setId( idWorker.nextId()+"" );
+		article.setVisits(0);
+		article.setComments(0);
 		article.setCreateTime(new Date());
 		article.setIsTop("false");
 		this.update(article);
