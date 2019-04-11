@@ -1,4 +1,5 @@
 package org.bighamapi.hmp.controller;
+import java.util.HashMap;
 import java.util.Map;
 
 import org.bighamapi.hmp.entity.PageResult;
@@ -80,8 +81,11 @@ public class ColumnController {
 	 */
 	@RequestMapping(method=RequestMethod.POST)
 	public Result add(@RequestBody Column column  ){
-		column.setId(idWorker.nextId()+"");
-		columnService.add(column);
+		Map<String,String> map = new HashMap<>();
+		map.put("name",column.getName());
+		if((column.getId() == null) && (columnService.findSearch(map).isEmpty())) {
+			columnService.add(column);
+		}
 		return new Result(true,StatusCode.OK,"增加成功");
 	}
 	

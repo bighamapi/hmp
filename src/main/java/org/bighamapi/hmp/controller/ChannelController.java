@@ -1,6 +1,9 @@
 package org.bighamapi.hmp.controller;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import org.bighamapi.hmp.pojo.Column;
 import org.bighamapi.hmp.util.IdWorker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -81,8 +84,12 @@ public class ChannelController {
 	 */
 	@RequestMapping(method=RequestMethod.POST)
 	public Result add(@RequestBody Channel channel){
-		channel.setId(idWorker.nextId()+"");
-		channelService.add(channel);
+		Map<String,String> map = new HashMap<>();
+		map.put("name",channel.getName());
+		if((channel.getId() == null) && (channelService.findSearch(map).isEmpty())) {
+			channelService.add(channel);
+		}
+
 		return new Result(true,StatusCode.OK,"增加成功");
 	}
 	
@@ -93,7 +100,7 @@ public class ChannelController {
 	@RequestMapping(value="/{id}",method= RequestMethod.PUT)
 	public Result update(@RequestBody Channel channel, @PathVariable String id ){
 		channel.setId(id);
-		channelService.update(channel);		
+		channelService.update(channel);
 		return new Result(true,StatusCode.OK,"修改成功");
 	}
 	

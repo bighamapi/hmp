@@ -125,11 +125,11 @@ public class ArticleService {
 		if (article.getColumn()!=null){
 			Map<String,String> map = new HashMap<>();
 			map.put("name",article.getColumn().getName());
-			Column column = columnService.findSearch(map).get(0);
-			if((article.getColumn().getId() == null) && (column == null)){
+			List<Column> column = columnService.findSearch(map);
+			if((article.getColumn().getId() == null) && (column.isEmpty())){
 				columnService.add(article.getColumn());
 			}else{
-				article.setColumn(column);
+				article.setColumn(column.get(0));
 			}
 		}
 		//如果有频道属性，保存
