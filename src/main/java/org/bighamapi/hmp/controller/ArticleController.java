@@ -35,7 +35,7 @@ public class ArticleController {
 	public Result findAll(){
 		return new Result(true,StatusCode.OK,"查询成功",articleService.findAll());
 	}
-	
+
 	/**
 	 * 根据ID查询
 	 * @param id ID
@@ -87,7 +87,7 @@ public class ArticleController {
 		articleService.add(article);
 		return new Result(true,StatusCode.OK,"增加成功");
 	}
-	
+
 	/**
 	 * 修改
 	 * @param article
@@ -95,10 +95,10 @@ public class ArticleController {
 	@RequestMapping(value="/{id}",method= RequestMethod.PUT)
 	public Result update(@RequestBody Article article, @PathVariable String id ){
 		article.setId(id);
-		articleService.update(article);		
+		articleService.update(article);
 		return new Result(true,StatusCode.OK,"修改成功");
 	}
-	
+
 	/**
 	 * 删除
 	 * @param id
@@ -108,5 +108,5 @@ public class ArticleController {
 		articleService.deleteById(id);
 		return new Result(true,StatusCode.OK,"删除成功");
 	}
-	
+
 }

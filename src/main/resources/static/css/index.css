@@ -1,0 +1,61 @@
+.box{
+    width: 70%;
+    margin: auto;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    overflow: hidden;
+}
+.content{
+    width: 70%;
+    float: left;
+    /* background-color: rgb(165, 133, 133); */
+    padding: 10px;
+    box-sizing: border-box;
+}
+.articleBox{
+    margin: 10px;
+    border: #eeeeee 1px solid;
+    padding: 20px;
+    box-sizing: border-box;
+}
+.sidebar{
+    width: 30%;
+    float: right;
+    padding: 20px;
+    box-sizing: border-box;
+}
+.sidebar > div{
+    margin-bottom: 10px;
+}
+#notice{
+    padding: 20px;
+    background-color: #3cbc8d;  
+    color: aliceblue;
+}
+.labelBox{
+    border: #eeeeee 1px solid;
+}
+.gridLabel{
+    height: 30px;
+    line-height: 30px;
+    padding-left: 5px;
+    box-sizing: border-box;
+    border-bottom: red 2px solid;
+}
+.channel{
+    border: #eeeeee solid 1px;
+    display: inline-block;
+    margin: 5px;
+    padding: 5px;
+    font-size: 13px;
+    cursor: pointer;
+}
+.rows{
+    height: 30px;
+    padding: 10px 0 5px 10px;
+    /* box-sizing: border-box; */
+    border: #eeeeee solid 1px;
+}
+.text{
+    margin: 5px;
+}

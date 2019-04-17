@@ -30,8 +30,6 @@ public class ColumnController {
 
 	@Autowired
 	private ColumnService columnService;
-	@Autowired
-	private IdWorker idWorker;
 	/**
 	 * 查询全部数据
 	 * @return

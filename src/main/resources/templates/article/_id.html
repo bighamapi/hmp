@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>[[${article.title}]]</title>
+    <link href="/css/index.css" rel="stylesheet" >
+</head>
+<body>
+<div class="panelBar" th:replace="header.html"></div>
+<div>
+    <div class="box">
+        <div style="border: #eeeeee 1px solid;" class="content">
+            <h1>[[${article.title}]]</h1>
+            <div>
+                [[${article.createTime}]] | [[${article.comments}]] | [[${article.visits}]]
+            </div>
+            <div class="text vditor-reset" th:utext="${article.content}">
+            </div>
+            <div class="comment">
+                <div>
+                    评论
+                </div>
+                <div >
+
+                </div>
+            </div>
+        </div>
+        <div class="sidebar">
+
+        </div>
+    </div>
+</div>
+<div class="panelBar" th:replace="footer.html"></div>
+</body>
+</html>

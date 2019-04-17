@@ -1,10 +1,84 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <link href="/css/index.css" rel="stylesheet" >
 </head>
 <body>
-    <p th:text="${data}"></p>
+    <div class="panelBar" th:replace="header.html"></div>
+    <div class="box">
+        <div class="content">
+            <div class="articleBox" th:each="article : ${articles}" >
+                <h1><a th:href="@{'/article/q/'+${article.id}}" th:text="${article.title}"></a></h1>
+                <div style="color:#a7a7a7; margin-top: 10px;">
+                    [[${article.createTime}]] | [[${article.comments}]] | [[${article.visits}]]
+                </div>
+                <div class="text vditor-reset" th:utext="${article.content}">
+                </div>
+                <div>
+                <span class="channel" @click="toChannel(c.id)"
+                      style="border: none;background-color: #bbbbbb;color:#eeeeee;"
+                      th:each="c: ${article.channel}" >
+                    #[[${c.name}]]
+                </span>
+                </div>
+            </div>
+        </div>
+        <div class="sidebar">
+            <div id="notice">
+                公告
+            </div>
+            <div class="labelBox" th:if="${columns!=null}">
+                <div class="gridLabel">
+                    专栏
+                </div>
+                <div style="padding: 15px;">
+                <span class="channel" @click="toChannel(column.id)" th:each="column : ${columns}" >
+                    [[${column.name}]]
+                </span>
+                </div>
+            </div>
+
+            <div class="labelBox" th:if="${channels !=null}">
+                <div class="gridLabel">
+                    频道
+                </div>
+                <div style="padding: 15px;">
+                <span class="channel" @click="toChannel(channel.id)" th:each="channel : ${channels}">
+                    [[${channel.name}]]
+                </span>
+                </div>
+            </div>
+
+            <div class="labelBox" th:if="${user !=null}">
+                <div class="gridLabel">
+                    HMP
+                </div>
+                <div style="padding: 15px;">
+                    <div>
+                        <img src=""  />
+                    </div>
+                    <div>
+                        文章
+                        评论
+                        浏览
+                    </div>
+                </div>
+            </div>
+
+            <div class="labelBox" th:if="${CommentMax !=null}">
+                <div class="gridLabel">
+                    访问最多的文章
+                </div>
+                <div>
+                    <div class="rows" th:each="article: ${CommentMax}" :key="index">
+                        <a th:href="@{'/article/'+${article.id}}">[[${article.title}]]</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="panelBar" th:replace="footer.html"></div>
 </body>
 </html>

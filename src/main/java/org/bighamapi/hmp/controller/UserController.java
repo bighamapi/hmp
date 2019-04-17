@@ -30,7 +30,7 @@ public class UserController {
     @GetMapping("/info")
     public Result getInfo(){
 
-        return new Result(true, StatusCode.OK, "请求成功",userService.findByUsername("admin"));
+        return new Result(true, StatusCode.OK, "请求成功",userService.findByUsername("static/admin"));
     }
     @PostMapping("/layout")
     public Result layout(){
@@ -47,7 +47,7 @@ public class UserController {
             return new Result(false, StatusCode.LOGINERROR , "用户名密码错误");
         }
         Map<String,String> map = new HashMap<>();
-        map.put("token","admin");
+        map.put("token", "static/admin");
         return new Result(true, StatusCode.OK , "请求成功",map);
     }
     @PostMapping()

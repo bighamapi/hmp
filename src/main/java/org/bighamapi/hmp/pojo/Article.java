@@ -30,6 +30,7 @@ public class Article implements Serializable{
 
 	private String username;//用户名
 	private String title;//标题
+	@javax.persistence.Column(columnDefinition = "text")
 	private String content;//文章正文
 	private java.util.Date createTime;//发表日期
 	private java.util.Date updateTime;//修改日期
