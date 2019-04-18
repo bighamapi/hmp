@@ -78,12 +78,14 @@ public class CommentService {
 		return commentDao.findById(id).get();
 	}
 
+	public List<Comment> findByArticleId(String aId){
+		return commentDao.findByArticleId(aId);
+	}
 	/**
 	 * 增加
 	 * @param comment
 	 */
 	public void add(Comment comment) {
-		System.out.println(comment);
 		if (comment.getEmail()==null){
 			throw new RuntimeException("没有权限！");
 		}

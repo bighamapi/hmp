@@ -2,29 +2,24 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title th:text="${pageInfo.title}">Title</title>
-    <link href="/css/index.css" rel="stylesheet" />
+    <title >标签墙</title>
+    <link href="/css/index.css" rel="stylesheet" >
 </head>
 <body>
     <div th:replace="header.html"></div>
     <div class="box">
-        <div class="content">
-            <div class="articleBox" th:each="article : ${articles}" >
-                <h1><a target="_blank" th:href="${article.url}" th:text="${article.title}"></a></h1>
-                <div style="color:#a7a7a7; margin-top: 10px;">
-                    [[${#dates.format(article.createTime,'yyyy-MM-dd')}]] | [[${article.comments}]] | [[${article.visits}]]
-                </div>
-                <div class="text vditor-reset" th:utext="${article.summary}">
-                </div>
-                <div>
-                <a th:href="@{'/channel/q/'+${c.id}}" class="channel"
-                      style="border: none;background-color: #bbb;color:#eee;"
-                      th:each="c: ${article.channel}" >
-                    #[[${c.name}]]
+        <div class="content" style="border: #eee 1px solid;">
+            <div style="border-bottom: #eee 1px solid;padding-top: 10px;padding-bottom: 10px">
+                <h3>共[[${channels.size()}]]个标签 </h3>
+            </div>
+            <div>
+                <a th:href="@{'/channel/q/'+${channel.id}}" class="channel" th:each="channel : ${channels}"
+                      style="border: none; background-color: #bbb;color:#eee;">
+                    <span th:aria-label="${'2 篇文章'}">#[[${channel.name}]]</span>
                 </a>
-                </div>
             </div>
         </div>
+
         <div class="sidebar">
             <div id="notice">
                 公告
@@ -60,7 +55,7 @@
                         <img src=""  />
                     </div>
                     <div>
-                        文章 [[${articles.size()}]]
+                        文章
                         评论
                         浏览
                     </div>
@@ -73,7 +68,7 @@
                 </div>
                 <div>
                     <div class="rows" th:each="article: ${CommentMax}" :key="index">
-                        <a target="_blank" th:href="@{'/article/q/'+${article.id}}">[[${article.title}]]</a>
+                        <a th:href="@{'/article/'+${article.id}}">[[${article.title}]]</a>
                     </div>
                 </div>
             </div>

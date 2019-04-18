@@ -5,6 +5,15 @@
     margin-bottom: 10px;
     overflow: hidden;
 }
+a{
+    text-decoration:none;
+    color: #383838;
+    transition: all .3s;
+    outline: none;
+}
+a:hover {
+    color: #ff4d3a;
+}
 .content{
     width: 70%;
     float: left;

@@ -30,8 +30,12 @@ public class Article implements Serializable{
 
 	private String username;//用户名
 	private String title;//标题
+
+	private String summary;//摘要
+
 	@javax.persistence.Column(columnDefinition = "text")
 	private String content;//文章正文
+
 	private java.util.Date createTime;//发表日期
 	private java.util.Date updateTime;//修改日期
 	private String isPublic;//是否公开
@@ -145,11 +149,40 @@ public class Article implements Serializable{
 		this.url = url;
 	}
 
+	public String getSummary() {
+		return summary;
+	}
+
+	public void setSummary(String summary) {
+		this.summary = summary;
+	}
+
 	public List<Comment> getComment() {
 		return comment;
 	}
 
 	public void setComment(List<Comment> comment) {
 		this.comment = comment;
+	}
+
+	@Override
+	public String toString() {
+		return "Article{" +
+				"id='" + id + '\'' +
+				", column=" + column +
+				", channel=" + channel +
+				", username='" + username + '\'' +
+				", title='" + title + '\'' +
+				", summary='" + summary + '\'' +
+				", content='" + content + '\'' +
+				", createTime=" + createTime +
+				", updateTime=" + updateTime +
+				", isPublic='" + isPublic + '\'' +
+				", isTop='" + isTop + '\'' +
+				", visits=" + visits +
+				", comments=" + comments +
+				", url='" + url + '\'' +
+				", comment=" + comment +
+				'}';
 	}
 }

@@ -4,15 +4,31 @@
     <meta charset="UTF-8">
     <title>[[${article.title}]]</title>
     <link href="/css/index.css" rel="stylesheet" >
+    <link href="https://cdn.bootcss.com/twitter-bootstrap/4.3.1/css/bootstrap.css" rel="stylesheet">
+    <style>
+        .comments > div{
+            margin: 5px;
+            overflow: hidden;
+            border-bottom: #eeeeee solid 1px;
+        }
+        .name{
+            float: left;
+            margin: 5px;
+        }
+        .commentContent{
+            float: left;
+            margin: 5px;
+        }
+    </style>
 </head>
 <body>
-<div class="panelBar" th:replace="header.html"></div>
-<div>
+<div th:replace="header.html"></div>
+<div id="app">
     <div class="box">
         <div style="border: #eeeeee 1px solid;" class="content">
             <h1>[[${article.title}]]</h1>
             <div>
-                [[${article.createTime}]] | [[${article.comments}]] | [[${article.visits}]]
+                [[${#dates.format(article.createTime,'yyyy-MM-dd')}]] | [[${article.comments}]] | [[${article.visits}]]
             </div>
             <div class="text vditor-reset" th:utext="${article.content}">
             </div>
@@ -20,9 +36,23 @@
                 <div>
                     评论
                 </div>
-                <div >
+                <div id="comment">
 
                 </div>
+                <div style="height: 50px">
+                    <button type="button" class="btn btn-primary"
+                           style="display: block;float: right;margin-top: 10px"
+                           onclick="submit()">
+                        发送评论
+                    </button>
+                </div>
+                <div class="comments" >
+                    <div th:each="comment : ${comments}">
+                        <div class="name" th:text="${comment.nickname}"></div>
+                        <div class="vditor-reset commentContent" th:utext="${comment.content}"></div>
+                    </div>
+                </div>
+
             </div>
         </div>
         <div class="sidebar">
@@ -30,6 +60,49 @@
         </div>
     </div>
 </div>
-<div class="panelBar" th:replace="footer.html"></div>
+<div th:replace="footer.html"></div>
+<script th:inline="javascript">
+    var comment = new Vditor("comment",{
+        cache:false,//缓存
+        height:176,
+        resize:{
+            enable:true
+        }
+    });
+    var newComment = {
+        article: {
+            id: [[${article.id}]]
+        },
+        email:"132123@qq.com",
+        nickname:"测试账号",
+        content:""
+    }
+
+    function submit() {
+        comment.getHTML().then(function (res) {
+            if (res == ""||res==null){
+                alert("内容不能为空")
+                return
+            }
+            newComment.content = res
+            send(newComment)
+        });
+    }
+    function send(newComment) {
+        var xmlhttp =new XMLHttpRequest();
+        xmlhttp.onreadystatechange = function () {
+            //若响应完成且请求成功
+            if(xmlhttp.readyState === 4 && xmlhttp.status === 200){
+                var res = JSON.parse(xmlhttp.response)
+                if (res.code==20000){
+                    alert(res.message)
+                }
+            }
+        }
+        xmlhttp.open("post","/comment",true);
+        xmlhttp.setRequestHeader("Content-Type","application/json");
+        xmlhttp.send(JSON.stringify(newComment))
+    }
+</script>
 </body>
 </html>

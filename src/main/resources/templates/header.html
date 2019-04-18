@@ -1,16 +1,14 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vditor/dist/index.dark.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vditor/dist/index.classic.css" />
     <script src="https://cdn.jsdelivr.net/npm/vditor/dist/index.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.15.6/styles/atom-one-light.min.css" />
+    <script src="/js/date.js"></script>
     <style>
         *{
             margin: 0;
             padding: 0;
-        }
-        a{
-            text-decoration:none;
-            /* color: red; */
         }
         header{
             width: 100%;
@@ -106,23 +104,19 @@
             <div class="title" th:text="${pageInfo.title}"></div>
             <div class="toTitle" th:text="${pageInfo.toTitle}"></div>
 
-            <div class="manage" th:if="${user != null}">
-                <a href="http://localhost:9528/#/" class="button" style="color: aliceblue;">管理</a>
-                <a class="button" style="color: aliceblue;">登出</a>
-            </div>
-            <div class="manage" th:if="${user == null}">
-                <a href="http://localhost:9528/#/" class="button" style="color: aliceblue;">管理</a>
+            <div class="manage">
+                <a href="http://localhost:9528/#/" target="_blank" class="button" style="color: aliceblue;">管理</a>
             </div>
         </div>
     </div>
     <div id="navigation">
         <div class="two">
-            <router-link class="label button" to="/">首页</router-link>
-            <router-link class="label button" to="/">动态</router-link>
-            <router-link class="label button" to="/">标签墙</router-link>
-            <router-link class="label button" to="/">存档</router-link>
-            <router-link class="label button" to="/">友情链接</router-link>
-            <router-link class="label button" to="/">RSS</router-link>
+            <a class="label button" href="/">首页</a>
+            <a class="label button" href="/">动态</a>
+            <a class="label button" href="/label">标签墙</a>
+            <a class="label button" href="/">存档</a>
+            <a class="label button" href="/">友情链接</a>
+            <a class="label button" href="/">RSS</a>
 
             <div id="search">
                 <input type="text" placeholder="搜索" /><button></button>

@@ -110,6 +110,7 @@ public class ArticleService {
 		article.setComments(0);
 		article.setCreateTime(new Date());
 		article.setIsTop("false");
+		article.setUrl("/article/q/"+article.getId());
 		this.update(article);
 	}
 

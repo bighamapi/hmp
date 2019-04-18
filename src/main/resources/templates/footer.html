@@ -6,9 +6,8 @@
             margin: 0;
             padding: 0;
         }
-        a{
-            text-decoration:none;
-            /* color: red; */
+        footer a{
+            color: #eeeeee;
         }
         footer{
             width: 100%;
@@ -29,7 +28,7 @@
 <footer th:fragment="footer">
     <div id="footer">
         <span th:if="${pageInfo.footer!=null}" style="color:aliceblue;" th:text="${pageInfo.footer}">  </span>
-        <a to="/" th:text="${pageInfo.title}"></a>  ●  <a>HMP</a>
+        <a href="/" th:text="${pageInfo.title}"></a>  ●  <a href="https://github.com/bjzt/hmp" target="_blank">HMP</a>
     </div>
 </footer>
 </body>
