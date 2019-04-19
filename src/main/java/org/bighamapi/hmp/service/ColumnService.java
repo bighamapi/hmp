@@ -12,6 +12,8 @@ import javax.persistence.criteria.Root;
 
 import org.bighamapi.hmp.util.IdWorker;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
@@ -73,6 +75,7 @@ public class ColumnService {
 	 * @param id
 	 * @return
 	 */
+	@Cacheable(value = "column",key="#id")
 	public Column findById(String id) {
 		return columnDao.findById(id).get();
 	}
@@ -93,6 +96,7 @@ public class ColumnService {
 	 * 修改
 	 * @param column
 	 */
+	@CacheEvict(value = "column",key="#column.id")
 	public void update(Column column) {
 		column.setUpdateTime(new Date());
 		columnDao.save(column);
@@ -102,6 +106,7 @@ public class ColumnService {
 	 * 删除
 	 * @param id
 	 */
+	@CacheEvict(value = "column",key="#id")
 	public void deleteById(String id) {
 		columnDao.deleteById(id);
 	}

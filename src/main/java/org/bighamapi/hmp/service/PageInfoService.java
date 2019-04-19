@@ -4,6 +4,8 @@ import org.bighamapi.hmp.dao.PageInfoDao;
 import org.bighamapi.hmp.dto.PageInfo;
 import org.bighamapi.hmp.pojo.Article;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.*;
@@ -25,6 +27,7 @@ public class PageInfoService {
 	 * 查询页面信息
 	 * @return
 	 */
+	@Cacheable(value = "pageInfo")
 	public PageInfo getInfo() {
 		if (pageInfoDao.findAll().isEmpty()){
 			PageInfo pageInfo = new PageInfo();
@@ -53,8 +56,8 @@ public class PageInfoService {
 	 * 修改
 	 * @param pageInfo
 	 */
+	@CacheEvict(value = "pageInfo")
 	public void update(PageInfo pageInfo) {
-		//redisTemplate.delete("article"+article.getId());
 		if (pageInfo.getId()==null){
 			pageInfo.setId(getInfo().getId());
 		}

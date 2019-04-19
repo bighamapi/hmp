@@ -1,14 +1,6 @@
-<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title th:text="${pageInfo.title}">Title</title>
-    <link href="/css/index.css" rel="stylesheet" />
-</head>
-<body>
-    <div th:replace="header.html"></div>
-    <div class="box">
-        <div class="content">
+
+        <div class="content" th:fragment="index">
             <div class="articleBox" th:each="article : ${articles}" >
                 <h1><a target="_blank" th:href="${article.url}" th:text="${article.title}"></a></h1>
                 <div style="color:#a7a7a7; margin-top: 10px;">
@@ -25,60 +17,3 @@
                 </div>
             </div>
         </div>
-        <div class="sidebar">
-            <div id="notice">
-                公告
-            </div>
-            <div class="labelBox" th:if="${columns!=null}">
-                <div class="gridLabel">
-                    专栏
-                </div>
-                <div style="padding: 15px;">
-                <span class="channel" th:each="column : ${columns}" >
-                    <a th:href="@{'/column/q/'+${column.id}}" th:text="${column.name}" th:aria-label="${'2 篇文章'}"></a>
-                </span>
-                </div>
-            </div>
-
-            <div class="labelBox" th:if="${channels !=null}">
-                <div class="gridLabel">
-                    频道
-                </div>
-                <div style="padding: 15px;">
-                <span class="channel" th:each="channel : ${channels}">
-                    <a th:href="@{'/channel/q/'+${channel.id}}" th:text="${channel.name}" th:aria-label="${'2 篇文章'}"></a>
-                </span>
-                </div>
-            </div>
-
-            <div class="labelBox" th:if="${user !=null}">
-                <div class="gridLabel">
-                    HMP
-                </div>
-                <div style="padding: 15px;">
-                    <div>
-                        <img src=""  />
-                    </div>
-                    <div>
-                        文章 [[${articles.size()}]]
-                        评论
-                        浏览
-                    </div>
-                </div>
-            </div>
-
-            <div class="labelBox" th:if="${CommentMax !=null}">
-                <div class="gridLabel">
-                    访问最多的文章
-                </div>
-                <div>
-                    <div class="rows" th:each="article: ${CommentMax}" :key="index">
-                        <a target="_blank" th:href="@{'/article/q/'+${article.id}}">[[${article.title}]]</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div th:replace="footer.html"></div>
-</body>
-</html>

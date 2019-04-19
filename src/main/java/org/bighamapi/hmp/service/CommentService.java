@@ -7,6 +7,8 @@ import org.bighamapi.hmp.pojo.Column;
 import org.bighamapi.hmp.pojo.Comment;
 import org.bighamapi.hmp.util.IdWorker;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
@@ -74,10 +76,12 @@ public class CommentService {
 	 * @param id
 	 * @return
 	 */
+	@Cacheable(value = "comment",key = "#id")
 	public Comment findById(String id) {
 		return commentDao.findById(id).get();
 	}
 
+	@Cacheable(value = "comment",key = "#aId")
 	public List<Comment> findByArticleId(String aId){
 		return commentDao.findByArticleId(aId);
 	}
@@ -85,6 +89,7 @@ public class CommentService {
 	 * 增加
 	 * @param comment
 	 */
+	@CacheEvict(value = "comment",key = "#comment.article.id")
 	public void add(Comment comment) {
 		if (comment.getEmail()==null){
 			throw new RuntimeException("没有权限！");
@@ -99,6 +104,7 @@ public class CommentService {
 	 * 修改
 	 * @param comment
 	 */
+	@CacheEvict(value = "comment",key = "#comment.id")
 	public void update(Comment comment) {
 		commentDao.save(comment);
 	}
@@ -107,6 +113,7 @@ public class CommentService {
 	 * 删除
 	 * @param id
 	 */
+	@CacheEvict(value = "comment",key = "#id")
 	public void deleteById(String id) {
 		commentDao.deleteById(id);
 	}

@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<div class="content" th:fragment="list" style="border: #eee 1px solid;">
+    <div style="border-bottom: #eee 1px solid;padding-top: 10px;padding-bottom: 10px">
+        <h3>共[[${articles.size()}]]个文章 </h3>
+    </div>
+    <div>
+        <div th:each="dateItem : ${articleByData}" style="border-top: #bbbbbb 1px solid">
+            <div style="margin: 3px">
+                <a th:href="@{'/date/q/'+${dateItem.months}}">
+                    [[${dateItem.months}]]([[${dateItem.total}]])
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+

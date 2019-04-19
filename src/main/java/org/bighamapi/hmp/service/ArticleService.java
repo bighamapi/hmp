@@ -7,10 +7,11 @@ import org.bighamapi.hmp.pojo.Column;
 import org.bighamapi.hmp.pojo.Comment;
 import org.bighamapi.hmp.util.IdWorker;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -30,20 +31,14 @@ import java.util.*;
 @Service
 @Transactional
 public class ArticleService {
-
 	@Autowired
 	private ArticleDao articleDao;
-	
 	@Autowired
 	private IdWorker idWorker;
-
-	@Autowired
-	private RedisTemplate redisTemplate;
 	@Autowired
 	private UserService userService;
 	@Autowired
 	private ChannelService channelService;
-
 	@Autowired
 	private ColumnService columnService;
 	@Autowired
@@ -57,6 +52,25 @@ public class ArticleService {
 		return articleDao.findAll();
 	}
 
+	/**
+	 * 根据月份分组
+	 * @return list(months,total)（月份，文章总数）
+	 */
+	public List<Map<String,String>> groupByDate(){
+		List<Map<String, String>> maps = articleDao.groupByDate();
+		//因为从数据库查出来的list是从现在到以前，所以要将它逆序
+		Collections.reverse(maps);
+		return maps;
+	}
+
+	/**
+	 * 根据月份查询
+	 * @return
+	 */
+	public List<Article> findByMonth(String month){
+		List<Article> byMonth = articleDao.findByMonth(month);
+		return byMonth;
+	}
 	
 	/**
 	 * 条件查询+分页
@@ -87,14 +101,9 @@ public class ArticleService {
 	 * @param id
 	 * @return
 	 */
+	@Cacheable(value = "article", key = "#id")
 	public Article findById(String id) {
-		//redis
-		Article article = null;//(Article) redisTemplate.opsForValue().get("article_"+id);
-		if(article == null){
-			article = articleDao.findById(id).get();
-			//redisTemplate.opsForValue().set("article_"+id, article);
-		}
-		return article;
+		return articleDao.findById(id).get();
 	}
 
 	public List<Article> findByVisits(int num) {
@@ -118,6 +127,7 @@ public class ArticleService {
 	 * 修改
 	 * @param article
 	 */
+	@CacheEvict(value = "article",key = "#article.id")
 	public void update(Article article) {
 		//redisTemplate.delete("article"+article.getId());
 		article.setUpdateTime(new Date());
@@ -164,6 +174,7 @@ public class ArticleService {
 	 * 删除
 	 * @param id
 	 */
+	@CacheEvict(value = "article",key = "#id")
 	public void deleteById(String id) {
 		Article byId = findById(id);
 		List<Comment> comment = byId.getComment();

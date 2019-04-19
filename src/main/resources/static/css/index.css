@@ -11,8 +11,19 @@ a{
     transition: all .3s;
     outline: none;
 }
+a:visited{
+    color: #383838;
+    text-decoration:none;
+}
+a:active{text-decoration:none;}
 a:hover {
+    text-decoration:none;
     color: #ff4d3a;
+}
+header a:hover {
+    text-decoration:none;
+    color: #ff4d3a;
+    background-color: #a7a7a7;
 }
 .content{
     width: 70%;
