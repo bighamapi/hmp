@@ -97,6 +97,13 @@ public class ArticleService {
 	}
 
 	/**
+	 * 文章总数
+	 * @return
+	 */
+	public Long count(){
+		return articleDao.count();
+	}
+	/**
 	 * 根据ID查询实体
 	 * @param id
 	 * @return

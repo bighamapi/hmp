@@ -39,14 +39,14 @@
             <div class="gridLabel">
                 HMP
             </div>
-            <div style="padding: 15px;">
-                <div>
-                    <img src=""  />
+            <div style="padding: 15px;overflow: hidden">
+                <div style="width: 30%;height: 30%;float: left">
+                    <img th:src="${user.image}" style="width: 100%;" />
                 </div>
-                <div>
-                    文章 [[${articles.size()}]]
-                    评论
-                    浏览
+                <div style="float: right;width: 40%">
+                    <div >文章 <strong>[[${articleTotal}]]</strong></div>
+                    <div>评论 <strong>[[${commentTotal}]]</strong></div>
+                    <div>浏览 <strong>[[${visitsTotal}]]</strong></div>
                 </div>
             </div>
         </div>

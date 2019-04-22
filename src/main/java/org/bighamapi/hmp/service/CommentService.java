@@ -60,6 +60,13 @@ public class CommentService {
 		return commentDao.findAll(specification, pageRequest);
 	}
 
+	/**
+	 * 评论总数
+	 * @return
+	 */
+	public long count(){
+		return commentDao.count();
+	}
 	
 	/**
 	 * 条件查询

@@ -1,5 +1,6 @@
 package org.bighamapi.hmp.controller;
 
+import org.bighamapi.hmp.pojo.Article;
 import org.bighamapi.hmp.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -8,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Controller
@@ -26,11 +28,18 @@ public class HmpController {
     private UserService userService;
     @Autowired
     private CommentService commentService;
+
     private Map<String,Object> getMap(){
         Map<String,Object> map = new HashMap<>();
-
+        map.put("articleTotal",articleService.count());
+        map.put("commentTotal",commentService.count());
+        List<Article> all = articleService.findAll();
+        int sum =0;
+        for (Article article:all) {
+            sum +=article.getVisits();
+        }
+        map.put("visitsTotal",sum);
         map.put("pageInfo",pageInfoService.getInfo());
-        map.put("articles",articleService.findAll());
         map.put("columns",columnService.findAll());
         map.put("channels",channelService.findAll());
         map.put("user",userService.findByUsername("admin"));
@@ -46,6 +55,7 @@ public class HmpController {
     @GetMapping("/")
     public String index(Model model){
         Map map = getMap();
+        map.put("articles",articleService.findAll());
         Map<String,String> html = new HashMap<>();
         html.put("file","index");
         html.put("name","index");
@@ -69,6 +79,12 @@ public class HmpController {
         model.addAllAttributes(map);
         return "template";
     }
+
+    /**
+     * 存档
+     * @param model
+     * @return
+     */
     @GetMapping("/archives")
     public String groupByDate(Model model){
         Map map = getMap();
@@ -101,26 +117,21 @@ public class HmpController {
      * @param model
      * @return
      */
-    @GetMapping("/channel/q/{id}")
-    public String channel(@PathVariable  String id, Model model){
-
-        model.addAttribute("articles",channelService.findById(id).getArticle());
+    @GetMapping("/{type}/q/{id}")
+    public String channel(@PathVariable String type,@PathVariable String id, Model model){
+        switch (type){
+            case "channel": model.addAttribute("articles",channelService.findById(id).getArticle());
+            break;
+            case "column": model.addAttribute("articles",columnService.findById(id).getArticle());
+            break;
+            default: return "error";
+        }
         model.addAttribute("pageInfo",pageInfoService.getInfo());
-
+        Map<String,String> html = new HashMap<>();
+        html.put("file","index");
+        html.put("name","index");
+        model.addAttribute("html",html);
         model.addAllAttributes(getMap());
-        return "index";
+        return "template";
     }
-
-    /**
-     * 根据专栏的文章列表
-     * @param id
-     * @param model
-     * @return
-     */
-    @GetMapping("/column/q/{id}")
-    public String column(@PathVariable  String id, Model model){
-        model.addAllAttributes(getMap());
-        return "index";
-    }
-
 }

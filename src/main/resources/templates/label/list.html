@@ -3,7 +3,7 @@
 
 <div class="content" th:fragment="list" style="border: #eee 1px solid;">
     <div style="border-bottom: #eee 1px solid;padding-top: 10px;padding-bottom: 10px">
-        <h3>共[[${articles.size()}]]个文章 </h3>
+        <h3>共[[${articleTotal}]]个文章 </h3>
     </div>
     <div>
         <div th:each="dateItem : ${articleByData}" style="border-top: #bbbbbb 1px solid">

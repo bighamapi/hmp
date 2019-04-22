@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<div id="dashboard" th:fragment="index">
+    <div id="frist">
+        <div>
+            <el-radio-group v-model="tabPosition" @change="fetchData" style="margin-bottom: 30px;">
+                <el-radio-button label="7">近7天</el-radio-button>
+                <el-radio-button label="30">近30天</el-radio-button>
+            </el-radio-group>
+        </div>
+        <div id="line"></div>
+    </div>
+
+    <div id="center">
+        <div id="pie"></div>
+        <div>
+            <div v-for="(article,index) of articles" :key="index" class="row">
+                <div class="idnex">{{index+1}}</div>
+                <div class="text">
+                    <a :href="article.url" style="font-size: 25px;"> {{article.title}}</a>
+                    <br/><span style="color: rgb(153, 152, 152);font-size: 15px;">发布时间：{{article.createTime}}</span>
+                </div>
+                <div class="visits">
+                    浏览人数：{{article.visits}}
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+    <!-- 引入样式 -->
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <!-- 引入组件库 -->
+    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+    <script type="text/javascript" src="/js/date.js" ></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/4.2.1/echarts.js"></script>
+    <script type="text/javascript" src="/js/echart.js" ></script>
+    <script>
+        var vue = new Vue({
+            el: '#dashboard',
+            data: function() {
+                return {
+                    articles:[],
+                    line:{},//折线图
+                    tabPosition: 7
+                }
+            },
+            methods:{
+                fetchData(){
+                    this.line = {
+                        text:"增量数据-趋势总览",
+                        data:[{
+                            name:'访问量',
+                            type:'line',
+                            stack: '总量',
+                            areaStyle:{},
+                            data:[120, 132, 101, 134, 90, 230, 210]
+                        },
+                            {
+                                name:'评论',
+                                type:'line',
+                                stack: '总量',
+                                areaStyle:{},
+                                data:[220, 182, 191, 234, 290, 330, 310]
+                            }],
+                        legend:['访问量','评论'],
+                        category: []
+                    }
+
+                    this.articles = [{"id":"1113017496912400384","column":{"id":"1113017497239556096","name":"测试专栏","summary":"这是个测试用的专栏数据","createTime":"2019-04-18T12:32:56.000+0000","updateTime":"2019-04-19T07:11:56.000+0000","state":null},"channel":[{"id":"1115058003368873984","name":"java","state":null},{"id":"1115058003930910720","name":"spring","state":null}],"username":"admin","title":"测试","summary":null,"content":"测试内容","createTime":"2019-04-02T09:57:05.000+0000","updateTime":"2019-04-09T03:07:28.000+0000","isPublic":"true","isTop":"true","visits":0,"comments":45,"url":"/article/q/1113017496912400384","comment":[{"id":"1118812583378423808","content":"<p>测试id</p>\n","createTime":"2019-04-18T09:44:41.000+0000","email":"132123@qq.com","nickname":"测试账号","parentId":null},{"id":"1118840788621594624","content":"<p>兄弟，肝胆相照，两肋插刀。<br>\n兄弟，不分彼此，同甘共苦。<br>\n你的菜，你的鱼，你的猪，你的鼠<br>\n我的心，我的意，我的笑，我的魂，<br>\n别人不懂，二人明白。<br>\n这次又要什么？<br>\n好好好，你去拿吧！<br>\n华农走后，兄弟看了一眼他的背影。<br>\n想起了当初那只没有满足愿望的竹鼠，<br>\n这可能就是友情吧！</p>\n","createTime":"2019-04-18T11:36:46.000+0000","email":"132123@qq.com","nickname":"测试账号","parentId":null}]},{"id":"1115439818013282304","column":null,"channel":[{"id":"1115439818046836736","name":"草稿","state":null}],"username":"admin","title":"草稿","summary":null,"content":"测试草稿","createTime":"2019-03-22T02:22:31.000+0000","updateTime":"2019-04-09T03:09:15.000+0000","isPublic":"false","isTop":"false","visits":0,"comments":0,"url":"/article/q/1115439818013282304","comment":[]},{"id":"1116253231069138944","column":null,"channel":[{"id":"1116253231081721856","name":"天气","state":null}],"username":"admin","title":"天气","summary":null,"content":"<h3>天气不错</h3>\n","createTime":"2019-04-11T08:14:44.000+0000","updateTime":"2019-04-14T07:29:25.000+0000","isPublic":"true","isTop":"false","visits":0,"comments":0,"url":"/article/q/1116253231069138944","comment":[]}]
+//			        = JSON.parse(str)
+
+                    this.line.category = this.test(this.tabPosition)
+                    this.drawLine()
+                },
+                drawLine(){
+                    // 基于准备好的dom，初始化echarts实例
+                    let line = echarts.init(document.getElementById("line"), 'light')
+                    let option = drawLine1(this.line)//selectedMode: 'single'//设置只能单选
+                    option.legend.selectedMode = "single"//设置只能单选
+                    line.setOption(option);
+                },
+                drawPie(){
+                    let pie = echarts.init(document.getElementById("pie"))
+                    pie.setOption(drawPie1())
+                },
+                test(num){
+                    let array = new Array()
+                    let today = new Date();
+                    array.push(dateTimeFormatter(today.getTime(),"yyyy-MM-dd"))
+                    for(let i=1;i<num;i++){
+                        today = new Date(today-24*60*60*1000)
+                        array.push(dateTimeFormatter(today.getTime(),"yyyy-MM-dd"))
+                    }
+                    array.reverse()
+                    return array;
+                },
+            }
+        })
+        vue.fetchData()
+        vue.drawPie()
+    </script>
+</div>
+</html>

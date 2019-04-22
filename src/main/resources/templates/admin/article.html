@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<div id="article" class="box" th:fragment="article">
+    <div>
+        <div class="label">标题:</div>
+        <el-input v-model="artcle.title"></el-input>
+    </div>
+    <div>
+        <el-collapse accordion>
+            <el-collapse-item style="font-size:20px" title="是否添加到专栏">
+                <div>
+                    <el-autocomplete
+                            v-model="column"
+                            :fetch-suggestions="querySearchAsync"
+                            placeholder="请输入内容"
+                            @select="handleSelect"
+                    ></el-autocomplete>
+                </div>
+            </el-collapse-item>
+        </el-collapse>
+    </div>
+    <div class="label">正文：</div>
+    <div id="content">
+    </div>
+    <div>
+        <div class="label">标签：</div>
+        <el-input v-model="channel"></el-input>
+    </div>
+    <div>
+        <div class="label">摘要：</div>
+        <div id="summary"></div>
+    </div>
+    <div id="switch">
+        <el-button @click="addArticle(false)" type="danger">添加到草稿</el-button>
+        <el-button @click="addArticle(true)" type="primary">添加文章</el-button>
+    </div>
+    <!-- 引入vditor -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vditor/dist/index.classic.css" />
+    <script src="https://cdn.jsdelivr.net/npm/vditor/dist/index.min.js"></script>
+    <script th:inline="javascript">
+       var vue = new Vue({
+            el: '#article',
+            data: function() {
+                return {
+                    restaurants:[],//搜索框数据
+                    vditor :null,
+                    msg:"",
+                    channel:"",
+                    column:"",
+                    article:{
+                        title:"",
+                        channel:"",
+                        content:"",
+                        summary:""
+                    },
+                    summary :null
+                }
+            },
+            methods:{
+                /**
+                 * 添加文章
+                 */
+                addArticle(flag){
+                    this.artcle.username = "admin"
+                    this.vditor.getHTML(true).then(res =>{
+                        this.artcle.content = res
+                    })
+                    this.summary.getHTML(true).then(res =>{
+                        this.artcle.summary = res
+                    })
+                    let channels = this.channel.split(",");
+                    this.artcle.channel = new Array(channels.length)
+
+                    for(let i =0 ;i<channels.length;i++){
+                        this.artcle.channel[i] = {}
+                        this.artcle.channel[i].name = channels[i]
+                    }
+                    this.artcle.isPublic=flag
+                    //if(是更新){
+
+                    //}else{ update() }
+                },
+                /**
+                 * 返回搜索的专栏
+                 */
+                querySearchAsync(queryString, cb) {
+                    let restaurants = this.restaurants;
+                    let results = queryString ? restaurants.filter(this.createStateFilter(queryString)) : restaurants;
+
+                    cb(results);
+                },
+                createStateFilter(queryString) {
+                    return (state) => {
+                        return (state.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0);
+                    };
+                },
+                handleSelect(item) {
+                },
+                open(message,type){
+                    this.$message({
+                        message: message,
+                        type: type
+                    });
+                }
+            }
+        })
+           //summary
+           const summary = new Vditor("summary",{
+               cache:false,//缓存
+               resize:{
+                   enable:true
+               }
+           })
+           const vditor = new Vditor("content", {
+               cache:false,//缓存
+               // placeholder:"请输入内容",
+               height:500,
+               preview:{
+                   show: true
+               },
+               upload:{
+                   url:"http://localhost:8080/file",//文件上传路径
+                   success:function(textarea,msg){//textarea
+                       //将返回的信息传为json对象
+                       msg = JSON.parse(msg)
+
+                       if(msg.code === 20000){//请求成功
+                           vue.open(msg.message,"success")
+                           let content;
+                           for(var key in msg.data){
+                               //获取文件后缀，判断类型
+                               let temp = key.substring(key.lastIndexOf('.'))
+                               if(temp =="png"|| temp =="jpg"){
+                                   content = "!["+ key +"]("+msg.data[key]+")"
+                               }else{
+                                   content = "["+ key +"]("+msg.data[key]+")"
+                               }
+                           }
+                           //插入上传文件后的markdown代码
+                           vditor.insertValue(content)
+                       }else{//请求失败
+                           vue.open(msg.message,"error")
+                       }
+
+                   }
+               },
+               resize:{
+                   enable:true
+               }
+           })
+       vue.summary = summary;
+       vue.vditor = vditor;
+           //取到浏览器的专栏数据来
+           vue.restaurants = []
+           if(/*[[${article!=null}]]*/ false){
+               vue.article = [[${article}]];
+               vditor.setValue(vue.artcle.content)
+               summary.setValue(vue.artcle.summary)
+               for(let i=0;i<vue.artcle.channel.length;i++){
+                   if(i==vue.artcle.channel.length-1){
+                       vue.channel+=vue.artcle.channel[i].name
+                       break
+                   }
+                   vue.channel+=vue.artcle.channel[i].name +","
+               }
+           }
+    </script>
+</div>
+</html>

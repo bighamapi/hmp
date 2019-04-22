@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<div id="articleManage" th:fragment="articleManage">
+    <br/>
+    <el-form :inline="true">
+        <el-form-item label="标题查询" >
+            <el-input v-model="searchMap.title" placeholder="输入标题查询"></el-input>
+        </el-form-item>
+        <el-form-item label="日期查询" >
+            <el-date-picker
+                    v-model="searchMap.date"
+                    type="daterange"
+                    align="right"
+                    unlink-panels
+                    range-separator="至"
+                    start-placeholder="开始日期"
+                    end-placeholder="结束日期">
+            </el-date-picker>
+        </el-form-item>
+        <el-button type="primary" @click="fetchData()">搜索</el-button>
+    </el-form>
+    <el-table @cell-mouse-enter="cell" @cell-mouse-leave="cell" :data="list" style="width: 100%">
+        <el-table-column prop="title" width="1000" label="标题">
+            <template slot-scope="scope">
+                <router-link :to="scope.row.url">{{scope.row.title}}</router-link>
+                <span style="display:none;">
+                        <el-button @click="toUpdate(scope.row.id)" type="text">更新</el-button>
+                        <el-button @click="deleteArticle(scope.row.id)" type="text">删除</el-button>
+                        <el-button @click="top(scope.row.id)" type="text" v-if="scope.row.isTop=='false'">置顶</el-button>
+                        <el-button @click="noTop(scope.row.id)" type="text" v-if="scope.row.isTop=='true'">取消置顶</el-button>
+                    </span>
+            </template>
+        </el-table-column>
+        <el-table-column align="center" prop="username" label="作者">
+        </el-table-column>
+        <el-table-column align="center" prop="comments" label="评论">
+        </el-table-column>
+        <el-table-column align="center" prop="visits" label="浏览数">
+        </el-table-column>
+        <el-table-column align="center" prop="date" label="日期">
+        </el-table-column>
+    </el-table>
+    <el-pagination
+            background
+            @size-change="fetchData()"
+            @current-change="fetchData()"
+            :current-page="currentPage"
+            :page-sizes="[10, 20, 50, 100]"
+            :page-size="pageSize"
+            layout="total, sizes, prev, pager, next, jumper"
+            :total="total">
+    </el-pagination>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script>
+        var vue = new Vue({
+            el: '#articleManage',
+            data: function () {
+                return {
+                    list:[],
+                    flag: false,
+                    currentPage: 1,
+                    pageSize: 10,
+                    searchMap: {isPublic: true},//条件查询
+                    total: 0
+                }
+            },
+            created(){
+                this.fetchData()
+            },
+
+            methods:{
+                fetchData(){
+                    axios.post(`/article/search/${this.currentPage}/${this.pageSize}`,this.searchMap).then(response=>{
+                        vue.list = response.data.data.rows
+                        vue.total = response.data.data.total
+                    })
+                }
+                ,
+                /**
+                 * row 这行的所有数据的json对象
+                 * column 当前列(el-table-column)
+                 * cell dom元素(td)单元格
+                 * event 事件
+                 */
+                cell(row, column, cell, event){
+                    if(column.label!="标题") return ;
+
+                    let span = cell.getElementsByTagName("span")
+
+                    if(event.type =="mouseenter"){
+                        span[0].style.display="inline";
+                    }else if(event.type == "mouseleave"){
+                        span[0].style.display="none";
+                    }
+                },
+                toUpdate(id){
+                    window.location.href="/admin/article/"+id
+                },
+                deleteArticle(id){
+                    //确认信息对话框
+                    this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        type: 'warning'
+                    }).then(() => {//确认
+                        axios.delete(`/article/${id}`).then(response=>{
+                            if(response.data.code==20000){
+                                this.open(response.data.message,"success")
+                                this.fetchData()
+                            }else{
+                                this.open(response.data.message,"error")
+                            }
+                        })
+                    }).catch(() => {//取消
+                        this.open("已取消删除","info")
+                    });
+                },
+                top(id){
+                    axios.get(`/article/${id}`).then(response => {
+                        let article = response.data.data
+                        console.log(article);
+                    article.isTop = true;
+                    console.log(article);
+
+                    axios.put(`/article/${id}`,{article: article}).then(response=>{
+                        if(response.data.code!=20000){
+                        this.open(response.data.message,"error")
+                        }
+                    })
+                })
+                    this.fetchData()
+                },
+                open(message,type){
+                    this.$message({
+                        message: message,
+                        type: type
+                    });
+                },
+                noTop(id){
+                    axios.get(`/article/${id}`).then(response => {
+                        let article = response.data.data
+                        console.log(article);
+                        article.isTop = false;
+                        console.log(article);
+
+                        axios.put(`/article/${id}`,{article: article}).then(response=>{
+                            if(response.data.code!=20000){
+                                this.open(response.data.message,"error")
+                            }
+                        })
+                    })
+                    this.fetchData()
+                }
+            }
+        })
+    </script>
+</div>
+</html>
