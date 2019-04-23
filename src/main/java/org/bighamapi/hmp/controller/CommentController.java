@@ -14,7 +14,6 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/comment")
-@CrossOrigin
 public class CommentController {
     @Autowired
     CommentService commentService;

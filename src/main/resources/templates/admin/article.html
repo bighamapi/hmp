@@ -3,18 +3,17 @@
 <div id="article" class="box" th:fragment="article">
     <div>
         <div class="label">标题:</div>
-        <el-input v-model="artcle.title"></el-input>
+        <el-input v-model="article.title"></el-input>
     </div>
     <div>
         <el-collapse accordion>
             <el-collapse-item style="font-size:20px" title="是否添加到专栏">
                 <div>
                     <el-autocomplete
-                            v-model="column"
-                            :fetch-suggestions="querySearchAsync"
-                            placeholder="请输入内容"
-                            @select="handleSelect"
-                    ></el-autocomplete>
+                        v-model="column"
+                        :fetch-suggestions="querySearchAsync"
+                        placeholder="请输入内容">
+                    </el-autocomplete>
                 </div>
             </el-collapse-item>
         </el-collapse>
@@ -34,15 +33,18 @@
         <el-button @click="addArticle(false)" type="danger">添加到草稿</el-button>
         <el-button @click="addArticle(true)" type="primary">添加文章</el-button>
     </div>
+
     <!-- 引入vditor -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vditor/dist/index.classic.css" />
     <script src="https://cdn.jsdelivr.net/npm/vditor/dist/index.min.js"></script>
+
+    <script src="https://cdn.bootcss.com/axios/0.19.0-beta.1/axios.min.js"></script>
     <script th:inline="javascript">
        var vue = new Vue({
             el: '#article',
             data: function() {
                 return {
-                    restaurants:[],//搜索框数据
+                    restaurants: [],//搜索框数据
                     vditor :null,
                     msg:"",
                     channel:"",
@@ -51,7 +53,8 @@
                         title:"",
                         channel:"",
                         content:"",
-                        summary:""
+                        summary:"",
+                        column: {}
                     },
                     summary :null
                 }
@@ -61,31 +64,62 @@
                  * 添加文章
                  */
                 addArticle(flag){
-                    this.artcle.username = "admin"
-                    this.vditor.getHTML(true).then(res =>{
-                        this.artcle.content = res
+                    this.article.username = "admin"
+                    this.vditor.getHTML().then(res =>{
+                        vue.article.content = res
+                        console.log(res)
+                        vue.summary.getHTML().then(res=>{
+                            console.log(res)
+                            vue.article.summary = res
+                            vue.submit(flag)
+                            console.log(vue.article)
+                        })
                     })
-                    this.summary.getHTML(true).then(res =>{
-                        this.artcle.summary = res
-                    })
+
+                },
+                submit(flag){
                     let channels = this.channel.split(",");
-                    this.artcle.channel = new Array(channels.length)
+                    this.article.channel = new Array(channels.length)
 
                     for(let i =0 ;i<channels.length;i++){
-                        this.artcle.channel[i] = {}
-                        this.artcle.channel[i].name = channels[i]
+                        this.article.channel[i] = {}
+                        this.article.channel[i].name = channels[i]
                     }
-                    this.artcle.isPublic=flag
-                    //if(是更新){
-
-                    //}else{ update() }
+                    this.article.isPublic=flag
+                    this.article.column.name = this.column
+                    if([[${article}]]){
+                        axios.put('/article/'+[[${article!=null? article.id: "" }]],this.article).then(function (response){
+                            if(response.data.code==20000){
+                                vue.open(response.data.message,"success")
+                            }else{
+                                vue.open(response.data.message,"error")
+                            }
+                        })
+                    }else{
+                        axios.post('/article',this.article).then(function (response){
+                            if(response.data.code==20000){
+                                vue.open(response.data.message,"success")
+                            }else{
+                                vue.open(response.data.message,"error")
+                            }
+                        })
+                    }
                 },
                 /**
                  * 返回搜索的专栏
+                 * queryString 输入的字段
+                 * cb 回掉函数：返回专栏列表
                  */
-                querySearchAsync(queryString, cb) {
-                    let restaurants = this.restaurants;
-                    let results = queryString ? restaurants.filter(this.createStateFilter(queryString)) : restaurants;
+                querySearchAsync(queryString, cb){
+                    this.restaurants = [[${columns}]];
+                    let restaurant = new Array();
+                    for (s of this.restaurants) {
+                        if (s.name != null) {
+                            restaurant.push({"value": s.name})
+                        }
+                    }
+
+                    let results = queryString ? restaurant.filter(this.createStateFilter(queryString)) : restaurant;
 
                     cb(results);
                 },
@@ -93,8 +127,6 @@
                     return (state) => {
                         return (state.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0);
                     };
-                },
-                handleSelect(item) {
                 },
                 open(message,type){
                     this.$message({
@@ -154,15 +186,21 @@
            vue.restaurants = []
            if(/*[[${article!=null}]]*/ false){
                vue.article = [[${article}]];
-               vditor.setValue(vue.artcle.content)
-               summary.setValue(vue.artcle.summary)
-               for(let i=0;i<vue.artcle.channel.length;i++){
-                   if(i==vue.artcle.channel.length-1){
-                       vue.channel+=vue.artcle.channel[i].name
-                       break
+
+               vditor.html2md(vue.article.content).then(res =>{
+                   vditor.setValue(res)
+                   summary.setValue(vue.article.summary ? vue.article.summary:"")
+                   for(let i=0;i<vue.article.channel.length;i++){
+                       if(i==vue.article.channel.length-1){
+                           vue.channel+=vue.article.channel[i].name
+                           break
+                       }
+                       vue.channel+=vue.article.channel[i].name +","
                    }
-                   vue.channel+=vue.artcle.channel[i].name +","
-               }
+                    this.column = vue.article.column.name
+               })
+
+
            }
     </script>
 </div>

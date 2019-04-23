@@ -27,7 +27,6 @@ import org.bighamapi.hmp.entity.StatusCode;
  */
 @RestController
 @RequestMapping("/channel")
-@CrossOrigin
 public class ChannelController {
 
 	@Autowired

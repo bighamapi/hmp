@@ -23,11 +23,13 @@ public class UserService {
         userDao.save(user);
     }
 
+    public User findAdmin(){
+        return userDao.findByRole("admin");
+    }
     public void save(User user) {
         userDao.save(user);
     }
 
-    @Cacheable(value = "user",key="#username")
     public User findByUsername(String username) {
         User user = userDao.findByUsername(username);
         return user;

@@ -136,7 +136,6 @@ public class ArticleService {
 	 */
 	@CacheEvict(value = "article",key = "#article.id")
 	public void update(Article article) {
-		//redisTemplate.delete("article"+article.getId());
 		article.setUpdateTime(new Date());
 		if(userService.findByUsername(article.getUsername()) ==null){
 			throw new RuntimeException("用户不存在");

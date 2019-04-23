@@ -24,7 +24,6 @@ import org.bighamapi.hmp.service.ColumnService;
  *
  */
 @RestController
-@CrossOrigin
 @RequestMapping("/column")
 public class ColumnController {
 

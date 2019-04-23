@@ -42,7 +42,7 @@ public class HmpController {
         map.put("pageInfo",pageInfoService.getInfo());
         map.put("columns",columnService.findAll());
         map.put("channels",channelService.findAll());
-        map.put("user",userService.findByUsername("admin"));
+        map.put("user",userService.findAdmin());
         map.put("CommentMax",articleService.findByVisits(4));
         return map;
     }

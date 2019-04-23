@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<div id="articleManage" th:fragment="articleManage">
+<div id="articleManage" style="margin: 20px" th:fragment="articleManage">
     <br/>
     <el-form :inline="true">
         <el-form-item label="标题查询" >
@@ -50,7 +50,7 @@
             layout="total, sizes, prev, pager, next, jumper"
             :total="total">
     </el-pagination>
-    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.bootcss.com/axios/0.19.0-beta.1/axios.min.js"></script>
     <script>
         var vue = new Vue({
             el: '#articleManage',
@@ -60,14 +60,13 @@
                     flag: false,
                     currentPage: 1,
                     pageSize: 10,
-                    searchMap: {isPublic: true},//条件查询
+                    searchMap: {isPublic: [[${isPublic}]]},//条件查询
                     total: 0
                 }
             },
             created(){
                 this.fetchData()
             },
-
             methods:{
                 fetchData(){
                     axios.post(`/article/search/${this.currentPage}/${this.pageSize}`,this.searchMap).then(response=>{
@@ -122,7 +121,7 @@
                     article.isTop = true;
                     console.log(article);
 
-                    axios.put(`/article/${id}`,{article: article}).then(response=>{
+                    axios.put(`/article/${id}`,article).then(response=>{
                         if(response.data.code!=20000){
                         this.open(response.data.message,"error")
                         }

@@ -57,3 +57,20 @@
     float: right;
     margin: 10px 0 10px 0;
 }
+.article{
+    color: blue;
+    cursor: pointer;
+    margin-left: 10px;
+    margin-top: 5px;
+    font-size: 13px;
+}
+.del{
+    display:none;
+    margin-left:10px;
+    cursor: pointer;
+    font-size: 12px;
+    border: solid 1px #aaa;
+    background-color: #aaa;
+    color: white;
+    border-radius: 3px;
+}

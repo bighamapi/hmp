@@ -15,6 +15,7 @@ public class User implements Serializable {
     private String username;
     private String password;
     private String image;
+    private String role;
 
     public String getId() {
         return id;
@@ -40,6 +41,14 @@ public class User implements Serializable {
         this.password = password;
     }
 
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
     public String getImage() {
         return image;
     }
@@ -54,7 +63,8 @@ public class User implements Serializable {
                 "id='" + id + '\'' +
                 ", username='" + username + '\'' +
                 ", password='" + password + '\'' +
-                ", role='" + image + '\'' +
+                ", image='" + image + '\'' +
+                ", role='" + role + '\'' +
                 '}';
     }
 }

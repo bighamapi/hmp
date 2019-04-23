@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<div id="box" style="margin: 20px" th:fragment="comment">
+    <el-table @cell-mouse-enter="cell" @cell-mouse-leave="cell" :data="items" style="width: 100%">
+        <el-table-column prop="content" width="1000" label="评论内容">
+            <template slot-scope="scope">
+                <div class="vditor-reset" v-html="scope.row.content"></div>
+                <div class="article"><span style="color:red;font-style: italic;">from</span>  {{scope.row.article.title}}</div>
+                <div @click="del(scope.row.id)" class="del">删除</div>
+            </template>
+        </el-table-column>
+        <el-table-column align="center" prop="nickname" label="作者">
+        </el-table-column>
+        <el-table-column align="center" prop="email" label="邮箱">
+        </el-table-column>
+        <el-table-column align="center" prop="createTime" label="日期">
+        </el-table-column>
+    </el-table>
+    <el-pagination
+            background
+            @size-change="fetchData()"
+            @current-change="fetchData()"
+            :current-page="currentPage"
+            :page-sizes="[10, 20, 50, 100]"
+            :page-size="pageSize"
+            layout="total, sizes, prev, pager, next, jumper"
+            :total="total">
+    </el-pagination>
+
+    <script src="https://cdn.bootcss.com/axios/0.19.0-beta.1/axios.min.js"></script>
+    <script src="/js/date.js"></script>
+    <script>
+        var vue = new Vue({
+            el: '#box',
+            data(){
+                return {
+                    items:[],
+                    currentPage:1,
+                    pageSize:10,
+                    searchMap: {status:0},
+                    total: 0,
+                }
+            },
+            created(){
+                this.fetchData()
+            },
+            methods:{
+                fetchData(){
+                    axios.post(`/comment/search/${this.currentPage}/${this.pageSize}`,this.searchMap).then(response=>{
+                        this.items = response.data.data.rows
+                        this.total = response.data.data.total
+                        this.items.map(s=>{
+                            s.createTime = dateTimeFormatter(s.createTime,"yy-MM-dd hh:mm:ss")
+                        })
+                    })
+                },
+                cell(row, column, cell, event){
+                    if(column.label!="评论内容") return ;
+                    let del = cell.getElementsByClassName("del")
+
+                    if(event.type =="mouseenter"){
+                        del[0].style.display="inline";
+                    }else if(event.type == "mouseleave"){
+                        del[0].style.display="none";
+                    }
+                },
+                del(id){
+                    //确认信息对话框
+                    this.$confirm('此操作将永久删除该评论, 是否继续?', '提示', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        type: 'warning'
+                    }).then(() => {//确认
+                        axios.delete(`/comment/${id}`).then(response=>{
+                            if(response.code==20000){
+                                this.$message({
+                                    message: response.message,
+                                    type: "success"
+                                });
+                                this.fetchData()
+                            }else{
+                                this.$message({
+                                    message: response.message,
+                                    type: "error"
+                                });
+                            }
+                        })
+                    }).catch(() => {//取消
+                            this.$message({
+                                type: 'info',
+                                message: '已取消删除'
+                            });
+                        });
+                },
+            }
+        })
+    </script>
+</div>
+</html>

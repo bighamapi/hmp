@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<div id="pageFrom" style="margin: 20px" th:fragment="pageFrom">
+    <el-tabs type="border-card">
+        <el-tab-pane label="页面信息配置">
+            <div>
+                <div class="label">博客标题</div>
+                <el-input v-model="pageInfo.title"></el-input>
+
+                <div class="label">博客子标题</div>
+                <el-input v-model="pageInfo.toTitle"></el-input>
+
+                <div class="label">Meta Description</div>
+                <el-input v-model="pageInfo.meta"></el-input>
+
+                <div class="label">HTML head</div>
+                <el-input
+                        type="textarea"
+                        :rows="3"
+                        v-model="pageInfo.head">
+                </el-input>
+
+                <div class="label">公告</div>
+                <el-input
+                        type="textarea"
+                        :rows="3"
+                        v-model="pageInfo.notice">
+                </el-input>
+
+                <div class="label">页脚</div>
+                <el-input
+                        type="textarea"
+                        :rows="2"
+                        v-model="pageInfo.footer">
+                </el-input>
+                <div style="margin-top: 5px">
+                    <el-button type="primary" @click="updatePage">更新配置</el-button>
+                </div>
+
+            </div>
+        </el-tab-pane>
+        <el-tab-pane label="皮肤管理">暂无</el-tab-pane>
+    </el-tabs>
+    <script src="https://cdn.bootcss.com/axios/0.19.0-beta.1/axios.min.js"></script>
+    <script>
+        new Vue({
+            el: '#pageFrom',
+            data(){
+                return {
+                    pageInfo: {
+                        title: "",
+                        toTitle: "",
+                        meta: "",
+                        head: "",
+                        notice: "",
+                        footer: ""
+                    }
+                }
+            },
+            created(){
+                this.fetchData();
+            },
+            methods:{
+                fetchData(){
+                    axios.get("/pageInfo").then(response =>{
+                        if(response.data.code == 20000){
+                            this.pageInfo = response.data.data
+                        }else{
+                            this.$message({
+                                message: "请求失败",
+                                type: "error"
+                            });
+                        }
+                    })
+                },
+                updatePage(){
+                    axios.put("/pageInfo",this.pageInfo).then(response => {
+                        if(response.data.code == 20000){
+                            this.$message({
+                                message: response.data.message,
+                                type: "success"
+                            });
+                        }
+                    })
+                }
+            }
+        })
+    </script>
+</div>
+</html>

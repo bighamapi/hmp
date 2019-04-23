@@ -12,7 +12,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RestController
-@CrossOrigin
 @RequestMapping("/user")
 public class UserController {
 
@@ -29,12 +28,7 @@ public class UserController {
     }
     @GetMapping("/info")
     public Result getInfo(){
-
-        return new Result(true, StatusCode.OK, "请求成功",userService.findByUsername("static/admin"));
-    }
-    @PostMapping("/layout")
-    public Result layout(){
-        return new Result(true, StatusCode.OK, "请求成功");
+        return new Result(true, StatusCode.OK, "请求成功",userService.findAdmin());
     }
 
     @PostMapping("/login")
@@ -64,8 +58,13 @@ public class UserController {
      */
     @PutMapping("/{id}")
     public Result update(User user,@PathVariable String id){
-        user.setId(id);
-        userService.update(user);
+        User admin = userService.findAdmin();
+
+        if (!admin.getId().equals(id))
+            return new Result(false,StatusCode.ERROR,"未知错误");
+
+        admin.setPassword(user.getPassword());
+        userService.update(admin);
         return new Result(true, StatusCode.OK , "请求成功");
     }
 
