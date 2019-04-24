@@ -1,14 +1,15 @@
 package org.bighamapi.hmp.controller;
 
+import org.bighamapi.hmp.entity.Result;
+import org.bighamapi.hmp.entity.StatusCode;
+import org.bighamapi.hmp.pojo.User;
 import org.bighamapi.hmp.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -28,9 +29,11 @@ public class AdminController {
         return "admin/login";
     }
 
-    @GetMapping("/layout")
-    public String layout(){
-        return "admin/login";
+    @PostMapping("/layout")
+    @ResponseBody
+    public Result layout(HttpServletRequest request){
+        request.getSession().removeAttribute("user");
+        return new Result(true, StatusCode.OK,"请求成功");
     }
     @GetMapping
     public String admin(Model model){

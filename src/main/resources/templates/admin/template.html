@@ -147,7 +147,7 @@
           <div class="modal-body">是否要退出后台</div>
           <div class="modal-footer">
             <button class="btn btn-secondary" type="button" data-dismiss="modal">取消</button>
-            <a class="btn btn-primary" href="/admin/login">登出</a>
+            <a class="btn btn-primary" id="layout">登出</a>
           </div>
         </div>
       </div>
@@ -159,6 +159,19 @@
     <!--<script src="/vendor/datatables/dataTables.bootstrap4.js"></script>-->
     <!-- Custom scripts for all pages-->
     <script src="/js/sb-admin.min.js"></script>
+    <script>
+      $("#layout").click(function () {
+        $.ajax({
+          url:"/admin/layout",
+          type:"POST",
+          success:function (res) {
+            if (res.code==20000){
+              window.location.href="/"
+            }
+          }
+        })
+      })
+    </script>
   </div>
 </body>
 

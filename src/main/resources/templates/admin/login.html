@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -27,16 +27,35 @@
             <label for="password">密码</label>
             <input class="form-control" id="password" type="password" placeholder="Password">
           </div>
-          <a class="btn btn-primary btn-block" href="index.html">登陆</a>
+          <a class="btn btn-primary btn-block" id="login" >登陆</a>
         </form>
       </div>
     </div>
   </div>
   <!-- Bootstrap core JavaScript-->
-  <script src="vendor/jquery/jquery.min.js"></script>
-  <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="/vendor/jquery/jquery.min.js"></script>
+  <script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
   <!-- Core plugin JavaScript-->
-  <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+  <script src="/vendor/jquery-easing/jquery.easing.min.js"></script>
+  <script>
+    $("#login").click(function () {
+      var username = $("#username").val()
+      var password = $("#password").val()
+      $.ajax({
+        url:"/user/login",
+        type:"POST",
+        dataType:"json",
+        contentType: "application/json; charset=utf-8",
+        data:JSON.stringify({
+          username: username,
+          password: password
+        }),
+        success:function (res) {
+            window.location.href="/admin"
+        }
+      })
+    })
+  </script>
 </body>
 
 </html>

@@ -1,6 +1,7 @@
 package org.bighamapi.hmp.controller;
 
 import org.bighamapi.hmp.pojo.Article;
+import org.bighamapi.hmp.pojo.User;
 import org.bighamapi.hmp.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -46,7 +47,6 @@ public class HmpController {
         map.put("CommentMax",articleService.findByVisits(4));
         return map;
     }
-
     /**
      * 首页
      * @param model

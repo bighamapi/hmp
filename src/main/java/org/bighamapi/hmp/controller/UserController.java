@@ -8,6 +8,8 @@ import org.bighamapi.hmp.util.IdWorker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -32,7 +34,7 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public Result login(@RequestBody User user){
+    public Result login(@RequestBody User user, HttpServletRequest request){
         User user1 = userService.findByUsername(user.getUsername());
         if(user1==null){
             return new Result(false, StatusCode.LOGINERROR , "用户名密码错误");
@@ -40,9 +42,10 @@ public class UserController {
         if (!user1.getPassword().equals(user.getPassword())){
             return new Result(false, StatusCode.LOGINERROR , "用户名密码错误");
         }
-        Map<String,String> map = new HashMap<>();
-        map.put("token", "static/admin");
-        return new Result(true, StatusCode.OK , "请求成功",map);
+
+        HttpSession session = request.getSession();
+        session.setAttribute("user", user1);
+        return new Result(true, StatusCode.OK , "请求成功");
     }
     @PostMapping()
     public Result add(@RequestBody User user){

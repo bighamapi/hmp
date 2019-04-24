@@ -1,5 +1,6 @@
 package org.bighamapi.hmp;
 
+import org.bighamapi.hmp.interceptor.HmpInterceptor;
 import org.bighamapi.hmp.util.IdWorker;
 import org.bighamapi.hmp.util.JwtUtil;
 import org.springframework.boot.SpringApplication;
@@ -14,6 +15,7 @@ public class HmpApplication {
     public static void main(String[] args) {
         SpringApplication.run(HmpApplication.class, args);
     }
+
     @Bean
     public IdWorker idWorker(){
         return new IdWorker(1,1);
@@ -21,5 +23,9 @@ public class HmpApplication {
     @Bean
     public JwtUtil jwtUtil(){
         return new JwtUtil();
+    }
+    @Bean
+    public HmpInterceptor hmpInterceptor(){
+        return new HmpInterceptor();
     }
 }

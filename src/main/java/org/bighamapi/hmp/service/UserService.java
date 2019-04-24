@@ -24,7 +24,8 @@ public class UserService {
     }
 
     public User findAdmin(){
-        return userDao.findByRole("admin");
+        User admin = userDao.findByRole("admin");
+        return admin;
     }
     public void save(User user) {
         userDao.save(user);
