@@ -2,8 +2,9 @@ package org.bighamapi.hmp.controller;
 
 import org.bighamapi.hmp.entity.Result;
 import org.bighamapi.hmp.entity.StatusCode;
-import org.bighamapi.hmp.pojo.User;
 import org.bighamapi.hmp.service.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,6 +17,8 @@ import java.util.Map;
 @Controller
 @RequestMapping(value="/admin")
 public class AdminController {
+
+    private static final Logger LOG = LoggerFactory.getLogger(AdminController.class);
 
     @Autowired
     private ArticleService articleService;
@@ -33,6 +36,7 @@ public class AdminController {
     @ResponseBody
     public Result layout(HttpServletRequest request){
         request.getSession().removeAttribute("user");
+        LOG.debug("退出后台");
         return new Result(true, StatusCode.OK,"请求成功");
     }
     @GetMapping

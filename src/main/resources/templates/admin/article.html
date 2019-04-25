@@ -159,14 +159,13 @@
                        if(msg.code === 20000){//请求成功
                            vue.open(msg.message,"success")
                            let content;
-                           for(var key in msg.data){
-                               //获取文件后缀，判断类型
-                               let temp = key.substring(key.lastIndexOf('.'))
-                               if(temp =="png"|| temp =="jpg"){
-                                   content = "!["+ key +"]("+msg.data[key]+")"
-                               }else{
-                                   content = "["+ key +"]("+msg.data[key]+")"
-                               }
+                           //获取文件后缀，判断类型
+                           let temp = msg.data.url.substring(msg.data.url.lastIndexOf('.'))
+                           console.log(temp)
+                           if(temp ==".png"|| temp ==".jpg"){
+                               content = "!["+ msg.data.file +"]("+msg.data.url+")"
+                           }else{
+                               content = "["+ msg.data.file +"]("+msg.data.url+")"
                            }
                            //插入上传文件后的markdown代码
                            vditor.insertValue(content)

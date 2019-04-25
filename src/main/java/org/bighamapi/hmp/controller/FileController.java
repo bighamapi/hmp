@@ -1,10 +1,13 @@
 package org.bighamapi.hmp.controller;
 
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.bighamapi.hmp.entity.Result;
+import org.bighamapi.hmp.entity.StatusCode;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -13,13 +16,14 @@ import java.util.Map;
 public class FileController {
 
     @PostMapping
-    public Map<String, Object> addFile(){
-        Map<String, Object> map = new HashMap<>();
-        map.put("code",0);
-        map.put("msg","请求成功");
+    public Result addFile(@RequestParam(value = "file[]") MultipartFile file){
+        String fileName = file.getOriginalFilename();
+
+        String name = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()) + file.getOriginalFilename().substring(file.getOriginalFilename().indexOf("."));
+        System.out.println(name);
         Map<String,Object> data = new HashMap<>();
-        data.put("url","https://segmentfault.com/img/bVEo3w?w=1200&h=2800");
-        map.put("data",data);
-        return map;
+        data.put("file",fileName);
+        data.put("url",name);
+        return new Result(true, StatusCode.OK,"请求成功",data);
     }
 }

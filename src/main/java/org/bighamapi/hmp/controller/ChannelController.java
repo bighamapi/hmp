@@ -5,6 +5,8 @@ import java.util.Map;
 
 import org.bighamapi.hmp.pojo.Column;
 import org.bighamapi.hmp.util.IdWorker;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -32,8 +34,7 @@ public class ChannelController {
 	@Autowired
 	private ChannelService channelService;
 
-	@Autowired
-	private IdWorker idWorker;
+	private Logger LOG = LoggerFactory.getLogger(ChannelController.class);
 	/**
 	 * 查询全部数据
 	 * @return
@@ -87,8 +88,8 @@ public class ChannelController {
 		map.put("name",channel.getName());
 		if((channel.getId() == null) && (channelService.findSearch(map).isEmpty())) {
 			channelService.add(channel);
+			LOG.info("添加频道（标签）："+channel.getName());
 		}
-
 		return new Result(true,StatusCode.OK,"增加成功");
 	}
 	
@@ -100,6 +101,7 @@ public class ChannelController {
 	public Result update(@RequestBody Channel channel, @PathVariable String id ){
 		channel.setId(id);
 		channelService.update(channel);
+		LOG.info("修改频道（标签）："+channel.getName());
 		return new Result(true,StatusCode.OK,"修改成功");
 	}
 	
@@ -109,6 +111,7 @@ public class ChannelController {
 	 */
 	@RequestMapping(value="/{id}",method= RequestMethod.DELETE)
 	public Result delete(@PathVariable String id ){
+		LOG.info("删除频道（标签）："+channelService.findById(id).getName());
 		channelService.deleteById(id);
 		return new Result(true,StatusCode.OK,"删除成功");
 	}

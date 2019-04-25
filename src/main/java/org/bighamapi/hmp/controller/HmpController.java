@@ -1,14 +1,17 @@
 package org.bighamapi.hmp.controller;
 
 import org.bighamapi.hmp.pojo.Article;
-import org.bighamapi.hmp.pojo.User;
 import org.bighamapi.hmp.service.*;
+import org.bighamapi.hmp.util.IPUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.Cache;
+import org.springframework.cache.CacheManager;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,6 +32,10 @@ public class HmpController {
     private UserService userService;
     @Autowired
     private CommentService commentService;
+
+    @Autowired
+    CacheManager cacheManager;
+//    private Cache cache =
 
     private Map<String,Object> getMap(){
         Map<String,Object> map = new HashMap<>();
@@ -104,8 +111,21 @@ public class HmpController {
      * @return
      */
     @GetMapping("/article/q/{id}")
-    public String article(@PathVariable  String id, Model model){
-        model.addAttribute("article",articleService.findById(id));
+    public String article(@PathVariable String id, Model model, HttpServletRequest request){
+        Article article = articleService.findById(id);
+        String ip = IPUtil.getIpAddr(request);
+        System.out.println(ip);
+        //获取ip缓存
+        Cache ipCache = cacheManager.getCache("ip");
+        if (ipCache.get(ip)==null){//如果缓存为空
+            //存入缓存
+            ipCache.put(ip,ip);
+            //浏览量加一
+            article.setVisits(article.getVisits()+1);
+        }else {
+            System.out.println(ipCache.get(ip).get());
+        }
+        model.addAttribute("article",article);
         model.addAttribute("pageInfo",pageInfoService.getInfo());
         model.addAttribute("comments",commentService.findByArticleId(id));
         return "article/_id";

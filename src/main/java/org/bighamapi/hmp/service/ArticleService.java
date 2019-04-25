@@ -187,7 +187,6 @@ public class ArticleService {
 		for(Comment comment1 : comment){
 			commentService.deleteById(comment1.getId());
 		}
-//		redisTemplate.delete("article"+id);
 		articleDao.deleteById(id);
 	}
 

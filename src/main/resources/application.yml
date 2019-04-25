@@ -8,7 +8,7 @@ spring:
     password: root
   jpa:
     database: mysql
-#    show-sql: true
+    show-sql: true
     hibernate:
       ddl-auto: update
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect  #不加这句则默认为MyISAM引擎
@@ -17,5 +17,6 @@ spring:
     cache: false
     #使用遗留的html5以去掉对html标签的校验
     mode: LEGACYHTML5
-#  redis:
-#    host: 111.230.57.178
+logging:
+  file: zt_Blog_log.log
+  path: data/log/

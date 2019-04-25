@@ -5,6 +5,8 @@ import org.bighamapi.hmp.entity.StatusCode;
 import org.bighamapi.hmp.pojo.User;
 import org.bighamapi.hmp.service.UserService;
 import org.bighamapi.hmp.util.IdWorker;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,7 +18,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/user")
 public class UserController {
-
+    private Logger LOG = LoggerFactory.getLogger(UserController.class);
     @Autowired
     private UserService userService;
 
@@ -37,14 +39,17 @@ public class UserController {
     public Result login(@RequestBody User user, HttpServletRequest request){
         User user1 = userService.findByUsername(user.getUsername());
         if(user1==null){
+            LOG.error("用户名密码错误： 登陆失败");
             return new Result(false, StatusCode.LOGINERROR , "用户名密码错误");
         }
         if (!user1.getPassword().equals(user.getPassword())){
+            LOG.error("用户名密码错误： 登陆失败");
             return new Result(false, StatusCode.LOGINERROR , "用户名密码错误");
         }
 
         HttpSession session = request.getSession();
         session.setAttribute("user", user1);
+        LOG.info("登陆成功");
         return new Result(true, StatusCode.OK , "请求成功");
     }
     @PostMapping()

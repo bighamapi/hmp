@@ -6,6 +6,8 @@ import org.bighamapi.hmp.entity.StatusCode;
 import org.bighamapi.hmp.pojo.Article;
 import org.bighamapi.hmp.service.ArticleService;
 import org.bighamapi.hmp.util.IdWorker;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
@@ -25,6 +27,8 @@ public class ArticleController {
 
 	@Autowired
 	private ArticleService articleService;
+	//日志处理
+	private Logger LOG = LoggerFactory.getLogger(ArticleController.class);
 
 	/**
 	 * 查询全部数据
@@ -84,6 +88,7 @@ public class ArticleController {
 	@RequestMapping(method=RequestMethod.POST)
 	public Result add(@RequestBody Article article ){
 		articleService.add(article);
+		LOG.info("发布了一篇文章: "+article.getTitle());
 		return new Result(true,StatusCode.OK,"增加成功");
 	}
 
@@ -95,6 +100,7 @@ public class ArticleController {
 	public Result update(@RequestBody Article article, @PathVariable String id ){
 		article.setId(id);
 		articleService.update(article);
+		LOG.info("修改文章："+ article.getTitle());
 		return new Result(true,StatusCode.OK,"修改成功");
 	}
 
@@ -104,6 +110,7 @@ public class ArticleController {
 	 */
 	@RequestMapping(value="/{id}",method= RequestMethod.DELETE)
 	public Result delete(@PathVariable String id ){
+		LOG.info("删除文章："+ articleService.findById(id).getTitle());
 		articleService.deleteById(id);
 		return new Result(true,StatusCode.OK,"删除成功");
 	}
