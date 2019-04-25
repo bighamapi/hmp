@@ -1,5 +1,6 @@
 package org.bighamapi.hmp;
 
+import org.bighamapi.hmp.dto.RSSFeedViewer;
 import org.bighamapi.hmp.interceptor.HmpInterceptor;
 import org.bighamapi.hmp.util.IdWorker;
 import org.bighamapi.hmp.util.JwtUtil;
@@ -27,5 +28,9 @@ public class HmpApplication {
     @Bean
     public HmpInterceptor hmpInterceptor(){
         return new HmpInterceptor();
+    }
+    @Bean
+    public RSSFeedViewer rssViewer(){
+        return new RSSFeedViewer();
     }
 }
