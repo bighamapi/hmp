@@ -74,4 +74,17 @@ public class PageInfo {
     public void setFooter(String footer) {
         this.footer = footer;
     }
+
+    @Override
+    public String toString() {
+        return "PageInfo{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", toTitle='" + toTitle + '\'' +
+                ", meta='" + meta + '\'' +
+                ", head='" + head + '\'' +
+                ", notice='" + notice + '\'' +
+                ", footer='" + footer + '\'' +
+                '}';
+    }
 }

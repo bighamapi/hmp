@@ -27,7 +27,7 @@ public class PageInfoService {
 	 * 查询页面信息
 	 * @return
 	 */
-	@Cacheable(value = "pageInfo")
+	@Cacheable(value = "pageInfo",key = "0")
 	public PageInfo getInfo() {
 		if (pageInfoDao.findAll().isEmpty()){
 			PageInfo pageInfo = new PageInfo();
@@ -56,11 +56,12 @@ public class PageInfoService {
 	 * 修改
 	 * @param pageInfo
 	 */
-	@CacheEvict(value = "pageInfo")
+	@CacheEvict(value = "pageInfo",key = "0")
 	public void update(PageInfo pageInfo) {
 		if (pageInfo.getId()==null){
 			pageInfo.setId(getInfo().getId());
 		}
+		System.out.println(pageInfo);
 		pageInfoDao.save(pageInfo);
 	}
 

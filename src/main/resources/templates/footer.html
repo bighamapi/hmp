@@ -6,8 +6,11 @@
             margin: 0;
             padding: 0;
         }
-        footer a{
+        #footer a{
             color: #eeeeee;
+        }
+        #footer a:hover{
+            color: red;
         }
         footer{
             width: 100%;
@@ -28,7 +31,7 @@
 <footer th:fragment="footer">
     <div id="footer">
         <span th:if="${pageInfo.footer!=null}" style="color:aliceblue;" th:text="${pageInfo.footer}">  </span>
-        <a href="/" th:text="${pageInfo.title}"></a>  ●  <a href="https://github.com/bjzt/hmp" target="_blank">HMP</a>
+        <a href="/" th:text="${pageInfo.title}"></a>  ●  <a href="https://github.com/bjzt/hmp" target="_blank">ZTBlog</a>
     </div>
 </footer>
 </body>

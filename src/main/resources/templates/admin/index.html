@@ -29,7 +29,7 @@
     <script type="text/javascript" src="/js/date.js" ></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/4.2.1/echarts.js"></script>
     <script type="text/javascript" src="/js/echart.js" ></script>
-    <script>
+    <script th:inline="javascript">
         var vue = new Vue({
             el: '#dashboard',
             data: function() {
@@ -61,7 +61,7 @@
                         category: []
                     }
 
-                    this.articles = [{"id":"1113017496912400384","column":{"id":"1113017497239556096","name":"测试专栏","summary":"这是个测试用的专栏数据","createTime":"2019-04-18T12:32:56.000+0000","updateTime":"2019-04-19T07:11:56.000+0000","state":null},"channel":[{"id":"1115058003368873984","name":"java","state":null},{"id":"1115058003930910720","name":"spring","state":null}],"username":"admin","title":"测试","summary":null,"content":"测试内容","createTime":"2019-04-02T09:57:05.000+0000","updateTime":"2019-04-09T03:07:28.000+0000","isPublic":"true","isTop":"true","visits":0,"comments":45,"url":"/article/q/1113017496912400384","comment":[{"id":"1118812583378423808","content":"<p>测试id</p>\n","createTime":"2019-04-18T09:44:41.000+0000","email":"132123@qq.com","nickname":"测试账号","parentId":null},{"id":"1118840788621594624","content":"<p>兄弟，肝胆相照，两肋插刀。<br>\n兄弟，不分彼此，同甘共苦。<br>\n你的菜，你的鱼，你的猪，你的鼠<br>\n我的心，我的意，我的笑，我的魂，<br>\n别人不懂，二人明白。<br>\n这次又要什么？<br>\n好好好，你去拿吧！<br>\n华农走后，兄弟看了一眼他的背影。<br>\n想起了当初那只没有满足愿望的竹鼠，<br>\n这可能就是友情吧！</p>\n","createTime":"2019-04-18T11:36:46.000+0000","email":"132123@qq.com","nickname":"测试账号","parentId":null}]},{"id":"1115439818013282304","column":null,"channel":[{"id":"1115439818046836736","name":"草稿","state":null}],"username":"admin","title":"草稿","summary":null,"content":"测试草稿","createTime":"2019-03-22T02:22:31.000+0000","updateTime":"2019-04-09T03:09:15.000+0000","isPublic":"false","isTop":"false","visits":0,"comments":0,"url":"/article/q/1115439818013282304","comment":[]},{"id":"1116253231069138944","column":null,"channel":[{"id":"1116253231081721856","name":"天气","state":null}],"username":"admin","title":"天气","summary":null,"content":"<h3>天气不错</h3>\n","createTime":"2019-04-11T08:14:44.000+0000","updateTime":"2019-04-14T07:29:25.000+0000","isPublic":"true","isTop":"false","visits":0,"comments":0,"url":"/article/q/1116253231069138944","comment":[]}]
+                    this.articles = [[${articles}]]
 //			        = JSON.parse(str)
 
                     this.line.category = this.test(this.tabPosition)

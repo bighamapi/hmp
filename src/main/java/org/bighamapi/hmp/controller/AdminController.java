@@ -26,6 +26,8 @@ public class AdminController {
     private ColumnService columnService;
     @Autowired
     private UserService userService;
+    @Autowired
+    private LinkService linkService;
 
     @GetMapping("/login")
     public String login(){
@@ -39,14 +41,17 @@ public class AdminController {
         LOG.debug("退出后台");
         return new Result(true, StatusCode.OK,"请求成功");
     }
+    //主页
     @GetMapping
     public String admin(Model model){
         Map<String,String> html = new HashMap<>();
         html.put("file","admin/index");
         html.put("name","index");
         model.addAttribute("html",html);
+        model.addAttribute("articles",articleService.findByVisits(3));
         return "admin/template";
     }
+    //文章发布和更新
     @RequestMapping(value = {"/article/{id}", "/article"},method = RequestMethod.GET)
     public String article(@PathVariable(required = false) String id, Model model){
         if(id !=null){
@@ -60,6 +65,7 @@ public class AdminController {
         model.addAttribute("columns",columnService.findAll());
         return "admin/template";
     }
+    //文章管理
     @GetMapping("/articleManage")
     public String articleMange(Model model){
         Map<String,String> html = new HashMap<>();
@@ -71,9 +77,9 @@ public class AdminController {
         model.addAttribute("isPublic",true);
         return "admin/template";
     }
+    //草稿箱
     @GetMapping("/tempArticle")
     public String tempArticle(Model model) {
-
         Map<String, String> html = new HashMap<>();
         html.put("file", "admin/articleManage");
         html.put("name", "articleManage");
@@ -83,6 +89,8 @@ public class AdminController {
         model.addAttribute("isPublic",false);
         return "admin/template";
     }
+
+    //评论管理
     @GetMapping("/comment")
     public String comment(Model model) {
         Map<String, String> html = new HashMap<>();
@@ -93,6 +101,7 @@ public class AdminController {
         model.addAttribute("pageName","评论管理");
         return "admin/template";
     }
+    //专栏管理
     @GetMapping("/column")
     public String column(Model model) {
         Map<String, String> html = new HashMap<>();
@@ -103,6 +112,7 @@ public class AdminController {
         model.addAttribute("pageName","专栏管理");
         return "admin/template";
     }
+    //页面设计
     @GetMapping("/pageManage")
     public String pageInfo(Model model) {
         Map<String, String> html = new HashMap<>();
@@ -113,7 +123,7 @@ public class AdminController {
         model.addAttribute("pageName","页面设计");
         return "admin/template";
     }
-
+    //密码管理
     @GetMapping("/password")
     public String password(Model model) {
         Map<String, String> html = new HashMap<>();
@@ -123,6 +133,18 @@ public class AdminController {
 
         model.addAttribute("pageName","修改密码");
         model.addAttribute("user",userService.findAdmin());
+        return "admin/template";
+    }
+    //链接管理
+    @GetMapping("/link")
+    public String link(Model model) {
+        Map<String, String> html = new HashMap<>();
+        html.put("file", "admin/link");
+        html.put("name", "link");
+        model.addAttribute("html", html);
+
+        model.addAttribute("pageName","链接管理");
+        model.addAttribute("link",linkService.findAll());
         return "admin/template";
     }
 }

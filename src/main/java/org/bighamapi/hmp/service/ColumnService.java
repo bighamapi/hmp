@@ -12,6 +12,9 @@ import javax.persistence.criteria.Root;
 
 import org.bighamapi.hmp.util.IdWorker;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.Cache;
+import org.springframework.cache.CacheManager;
+import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
@@ -29,6 +32,7 @@ import org.bighamapi.hmp.pojo.Column;
  *
  */
 @Service
+@CacheConfig(cacheNames = "column")
 public class ColumnService {
 
 	@Autowired
@@ -36,11 +40,14 @@ public class ColumnService {
 	
 	@Autowired
 	private IdWorker idWorker;
+	@Autowired
+	private CacheManager cacheManager;
 
 	/**
 	 * 查询全部列表
 	 * @return
 	 */
+	@Cacheable(key = "0")
 	public List<Column> findAll() {
 		return columnDao.findAll();
 	}
@@ -88,7 +95,11 @@ public class ColumnService {
 		column.setId( idWorker.nextId()+"" );
 		column.setCreateTime(new Date());
 		column.setUpdateTime(new Date());
-
+		//将all缓存清除
+		Cache cache = cacheManager.getCache("article");
+		if (cache.get("0")!=null){
+			cache.evict("0");
+		}
 		columnDao.save(column);
 	}
 
@@ -100,15 +111,26 @@ public class ColumnService {
 	public void update(Column column) {
 		column.setUpdateTime(new Date());
 		columnDao.save(column);
+		//将all缓存清除
+		Cache cache = cacheManager.getCache("article");
+		if (cache.get("0")!=null){
+			cache.evict("0");
+			cache.evict(column.getId());
+		}
 	}
 
 	/**
 	 * 删除
 	 * @param id
 	 */
-	@CacheEvict(value = "column",key="#id")
 	public void deleteById(String id) {
 		columnDao.deleteById(id);
+		//将all缓存清除
+		Cache cache = cacheManager.getCache("article");
+		if (cache.get("0")!=null){
+			cache.evict("0");
+			cache.evict(id);
+		}
 	}
 
 	/**

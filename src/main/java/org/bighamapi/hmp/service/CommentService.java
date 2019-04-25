@@ -7,6 +7,9 @@ import org.bighamapi.hmp.pojo.Column;
 import org.bighamapi.hmp.pojo.Comment;
 import org.bighamapi.hmp.util.IdWorker;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.Cache;
+import org.springframework.cache.CacheManager;
+import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
@@ -30,6 +33,7 @@ import java.util.Map;
  *
  */
 @Service
+@CacheConfig(cacheNames = "comment")
 public class CommentService {
 
 	@Autowired
@@ -37,11 +41,14 @@ public class CommentService {
 	
 	@Autowired
 	private IdWorker idWorker;
+	@Autowired
+	private CacheManager cacheManager;
 
 	/**
 	 * 查询全部列表
 	 * @return
 	 */
+	@Cacheable(key = "0")
 	public List<Comment> findAll() {
 		return commentDao.findAll();
 	}
@@ -83,12 +90,12 @@ public class CommentService {
 	 * @param id
 	 * @return
 	 */
-	@Cacheable(value = "comment",key = "#id")
+	@Cacheable(key = "#id")
 	public Comment findById(String id) {
 		return commentDao.findById(id).get();
 	}
 
-	@Cacheable(value = "comment",key = "#aId")
+	@Cacheable(key = "#aId")
 	public List<Comment> findByArticleId(String aId){
 		return commentDao.findByArticleId(aId);
 	}
@@ -96,33 +103,48 @@ public class CommentService {
 	 * 增加
 	 * @param comment
 	 */
-	@CacheEvict(value = "comment",key = "#comment.article.id")
 	public void add(Comment comment) {
 		if (comment.getEmail()==null){
 			throw new RuntimeException("没有权限！");
 		}
-		comment.setId( idWorker.nextId()+"" );
+		comment.setId( idWorker.nextId()+"");
 		comment.setCreateTime(new Date());
 
 		commentDao.save(comment);
+		//将all缓存清除
+		Cache cache = cacheManager.getCache("article");
+		if (cache.get("0")!=null){
+			cache.evict("0");
+			cache.evict(comment.getArticle().getId());
+		}
 	}
 
 	/**
 	 * 修改
 	 * @param comment
 	 */
-	@CacheEvict(value = "comment",key = "#comment.id")
 	public void update(Comment comment) {
 		commentDao.save(comment);
+		//将all缓存清除
+		Cache cache = cacheManager.getCache("article");
+		if (cache.get("0")!=null){
+			cache.evict("0");
+			cache.evict(comment.getId());
+		}
 	}
 
 	/**
 	 * 删除
 	 * @param id
 	 */
-	@CacheEvict(value = "comment",key = "#id")
 	public void deleteById(String id) {
 		commentDao.deleteById(id);
+		//将all缓存清除
+		Cache cache = cacheManager.getCache("article");
+		if (cache.get("0")!=null){
+			cache.evict("0");
+			cache.evict(id);
+		}
 	}
 
 	/**

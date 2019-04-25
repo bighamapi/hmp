@@ -6,9 +6,9 @@
         <h3>共[[${articleTotal}]]个文章 </h3>
     </div>
     <div>
-        <div th:each="dateItem : ${articleByData}" style="border-top: #bbbbbb 1px solid">
-            <div style="margin: 3px">
-                <a th:href="@{'/date/q/'+${dateItem.months}}">
+        <div th:each="dateItem : ${articleByData}" style="border-top: #eeeeee 1px solid">
+            <div style="margin: 10px 0 10px 10px">
+                <a th:href="@{'/archives/'+${dateItem.months}}">
                     [[${dateItem.months}]]([[${dateItem.total}]])
                 </a>
             </div>

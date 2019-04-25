@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<div class="content" th:fragment="link" style="border: #eee 1px solid;">
+    <div style="border-bottom: #eee 1px solid;padding-top: 10px;padding-bottom: 10px">
+        <h3>友情链接 </h3>
+    </div>
+    <div>
+        <div th:each="link : ${links}" style="border-top: #eeeeee 1px solid">
+            <a target="_blank" th:href="${link.url}">
+                <div style="margin: 10px 0 10px 10px" th:text="${link.name}"></div>
+            </a>
+        </div>
+    </div>
+</div>

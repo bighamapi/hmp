@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<div id="box" style="margin: 20px" th:fragment="link">
+    <div id="table">
+        <el-table @cell-mouse-enter="cell" @cell-mouse-leave="cell" :data="list">
+            <el-table-column prop="name" label="链接标题">
+                <template slot-scope="scope">
+                    <router-link :to="scope.row.name">{{scope.row.name}}</router-link>
+                    <span style="display:none;">
+                            <el-button @click="toUpdate(scope.row)" type="text">更新</el-button>
+                            <el-button @click="deleteColumn(scope.row.id)" type="text">删除</el-button>
+                        </span>
+                </template>
+            </el-table-column>
+
+            <el-table-column align="center" prop="url" width="250" label="链接url">
+                <template slot-scope="scope">
+                    <a target="_blank" :href="scope.row.url">{{scope.row.url}}</a>
+                </template>
+            </el-table-column>
+
+            <el-table-column align="center" prop="summary" width="1000" label="简介">
+            </el-table-column>
+        </el-table>
+    </div>
+    <div id="from">
+        <div class="label">链接标题</div>
+        <el-input v-model="link.name"></el-input>
+
+        <div class="label">url</div>
+        <el-input v-model="link.url"></el-input>
+
+        <div class="label">简介</div>
+        <el-input v-model="link.summary"></el-input>
+
+        <div id="update">
+            <el-button type="primary" @click="save">创建链接</el-button>
+        </div>
+    </div>
+
+    <el-dialog
+            title="更新链接"
+            :visible.sync="dialogVisible"
+            width="30%">
+        <el-form>
+            <el-form-item label="链接名称">
+                <el-input v-model="upLink.name"></el-input>
+            </el-form-item>
+            <el-form-item label="链接名称">
+                <el-input v-model="upLink.url"></el-input>
+            </el-form-item>
+            <el-form-item label="简介">
+                <el-input v-model="upLink.summary"></el-input>
+            </el-form-item>
+            <el-form-item>
+                <el-button @click="dialogVisible = false">取 消</el-button>
+                <el-button type="primary" @click="submit">确 定</el-button>
+            </el-form-item>
+        </el-form>
+    </el-dialog>
+
+    <script src="https://cdn.bootcss.com/axios/0.19.0-beta.1/axios.min.js"></script>
+    <script src="/js/date.js"></script>
+    <script>
+        new Vue({
+            el: '#box',
+            data(){
+                return {
+                    dialogVisible: false,
+                    list:[],
+                    link:{},
+                    upLink:{}
+                }
+            },
+            created(){
+                this.fetchData()
+            },
+            methods:{
+                fetchData(){
+                    axios.get("/link").then(response =>{
+                        this.list = response.data.data
+                    })
+                }
+                ,
+                /**
+                 * row 这行的所有数据的json对象
+                 * column 当前列(el-table-column)
+                 * cell dom元素(td)单元格
+                 * event 事件
+                 */
+                cell(row, column, cell, event){
+                    if(column.label!="链接标题") return ;
+
+                    let span = cell.getElementsByTagName("span")
+
+                    if(event.type =="mouseenter"){
+                        span[0].style.display="inline";
+                    }else if(event.type == "mouseleave"){
+                        span[0].style.display="none";
+                    }
+                },
+                toUpdate(link){
+                    this.dialogVisible = true;
+                    this.upLink = link;
+                },
+                save(){
+                    if(this.link.name == ""){
+                        this.open("名字不能为空","error")
+                        return
+                    }else{
+                        axios.post("/link",this.link).then(response=>{
+                            if(response.data.code==20000){
+                            this.open(response.data.message,"success")
+                        }else{
+                            this.open(response.data.message,"error")
+                        }
+                    })
+                        this.fetchData();
+                    }
+
+                },
+                submit(){
+                    axios.put(`/link/${this.upLink.id}`,this.upLink).then(response=>{
+                        if(response.data.code==20000){
+                        this.open(response.data.message,"success")
+                    }else{
+                        this.open(response.data.message,"error")
+                    }
+                })
+                    this.dialogVisible = false;
+                },
+                deleteColumn(id){
+                    //确认信息对话框
+                    this.$confirm('此操作将永久删除该链接, 是否继续?', '提示', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        type: 'warning'
+                    }).then(() => {//确认
+                        axios.delete(`/link/${id}`).then(response=>{
+                            if(response.data.code==20000){
+                        this.open(response.data.message,"success")
+                        this.fetchData()
+                    }else{
+                        this.open(response.data.message,"error")
+                    }
+                })
+                }).catch(() => {//取消
+                        this.open("已取消删除","info")
+                    });
+                },
+                open(message,type){
+                    this.$message({
+                        message: message,
+                        type: type
+                    });
+                },
+            }
+        })
+    </script>
+</div>
+</html>

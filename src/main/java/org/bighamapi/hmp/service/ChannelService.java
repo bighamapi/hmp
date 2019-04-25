@@ -11,6 +11,9 @@ import javax.persistence.criteria.Root;
 
 import org.bighamapi.hmp.util.IdWorker;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.Cache;
+import org.springframework.cache.CacheManager;
+import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
@@ -28,6 +31,7 @@ import org.bighamapi.hmp.pojo.Channel;
  *
  */
 @Service
+@CacheConfig(cacheNames = "channel")
 public class ChannelService {
 
 	@Autowired
@@ -35,11 +39,14 @@ public class ChannelService {
 	
 	@Autowired
 	private IdWorker idWorker;
+	@Autowired
+	private CacheManager cacheManager;
 
 	/**
 	 * 查询全部列表
 	 * @return
 	 */
+	@Cacheable(key = "0")
 	public List<Channel> findAll() {
 		return channelDao.findAll();
 	}
@@ -74,7 +81,7 @@ public class ChannelService {
 	 * @param id
 	 * @return
 	 */
-	@Cacheable(value = "channel",key = "#id")
+	@Cacheable(key = "#id")
 	public Channel findById(String id) {
 		return channelDao.findById(id).get();
 	}
@@ -86,24 +93,39 @@ public class ChannelService {
 	public void add(Channel channel) {
 		channel.setId( idWorker.nextId()+"" );
 		channelDao.save(channel);
+		//将all缓存清除
+		Cache cache = cacheManager.getCache("article");
+		if (cache.get("0")!=null){
+			cache.evict("0");
+		}
 	}
 
 	/**
 	 * 修改
 	 * @param channel
 	 */
-	@CacheEvict(value = "channel",key = "#channel.id")
 	public void update(Channel channel) {
 		channelDao.save(channel);
+		//将all缓存清除
+		Cache cache = cacheManager.getCache("article");
+		if (cache.get("0")!=null){
+			cache.evict("0");
+			cache.evict(channel.getId());
+		}
 	}
 
 	/**
 	 * 删除
 	 * @param id
 	 */
-	@CacheEvict(value = "channel",key = "#id")
+	@CacheEvict(key = "#id")
 	public void deleteById(String id) {
 		channelDao.deleteById(id);
+		//将all缓存清除
+		Cache cache = cacheManager.getCache("article");
+		if (cache.get("all")!=null){
+			cache.evict("all");
+		}
 	}
 
 	/**

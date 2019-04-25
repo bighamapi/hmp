@@ -34,8 +34,10 @@ public class HmpController {
     private CommentService commentService;
 
     @Autowired
-    CacheManager cacheManager;
-//    private Cache cache =
+    private LinkService linkService;
+
+    @Autowired
+    CacheManager cacheManager;//缓存管理器
 
     private Map<String,Object> getMap(){
         Map<String,Object> map = new HashMap<>();
@@ -99,11 +101,39 @@ public class HmpController {
         html.put("file","label/list");
         html.put("name","list");
         map.put("html", html);
-        model.addAllAttributes(map);
         model.addAttribute("articleByData",articleService.groupByDate());
+        model.addAllAttributes(map);
         return "template";
     }
+    @GetMapping("/archives/{year}/{month}")
+    public String archives(@PathVariable String year,@PathVariable String month, Model model){
+        Map map = getMap();
 
+        Map<String,String> html = new HashMap<>();
+        html.put("file","index");
+        html.put("name","index");
+        map.put("html", html);
+        model.addAttribute("articles",articleService.findByMonth(year+month));
+        model.addAllAttributes(map);
+
+        return "template";
+    }
+    /**
+     * 友情链接
+     * @param model
+     * @return
+     */
+    @GetMapping("/friendLink")
+    public String link(Model model){
+        Map map = getMap();
+        Map<String,String> html = new HashMap<>();
+        html.put("file","label/link");
+        html.put("name","link");
+        map.put("html", html);
+        model.addAttribute("links",linkService.findAll());
+        model.addAllAttributes(map);
+        return "template";
+    }
     /**
      * 文章正文页
      * @param id
@@ -114,16 +144,14 @@ public class HmpController {
     public String article(@PathVariable String id, Model model, HttpServletRequest request){
         Article article = articleService.findById(id);
         String ip = IPUtil.getIpAddr(request);
-        System.out.println(ip);
         //获取ip缓存
         Cache ipCache = cacheManager.getCache("ip");
-        if (ipCache.get(ip)==null){//如果缓存为空
+        if (ipCache.get(id+ip)==null){//如果缓存为空
             //存入缓存
-            ipCache.put(ip,ip);
+            ipCache.put(id+ip,ip);
             //浏览量加一
             article.setVisits(article.getVisits()+1);
-        }else {
-            System.out.println(ipCache.get(ip).get());
+            articleService.update(article);
         }
         model.addAttribute("article",article);
         model.addAttribute("pageInfo",pageInfoService.getInfo());

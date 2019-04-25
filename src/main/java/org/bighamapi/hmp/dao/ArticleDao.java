@@ -37,6 +37,6 @@ public interface ArticleDao extends JpaRepository<Article,String>,JpaSpecificati
     @Query(value = "select * from hmp_article where DATE_FORMAT( create_time, '%Y%m' ) = ? ORDER BY create_time desc",nativeQuery = true)
     List<Article> findByMonth(String month);
 
-    @Query(value = "select sum(?) from hmp_article",nativeQuery = true)
-    Long sumByAttribute(String attribute);
+//    @Query(value = "select sum(?) from hmp_article",nativeQuery = true)
+//    Long sumByAttribute(String attribute);
 }

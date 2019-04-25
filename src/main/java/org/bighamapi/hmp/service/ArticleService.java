@@ -7,6 +7,9 @@ import org.bighamapi.hmp.pojo.Column;
 import org.bighamapi.hmp.pojo.Comment;
 import org.bighamapi.hmp.util.IdWorker;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.Cache;
+import org.springframework.cache.CacheManager;
+import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
@@ -30,6 +33,7 @@ import java.util.*;
  */
 @Service
 @Transactional
+@CacheConfig(cacheNames = "article")
 public class ArticleService {
 	@Autowired
 	private ArticleDao articleDao;
@@ -43,14 +47,8 @@ public class ArticleService {
 	private ColumnService columnService;
 	@Autowired
 	private CommentService commentService;
-
-	/**
-	 * 查询全部列表
-	 * @return
-	 */
-	public List<Article> findAll() {
-		return articleDao.findAll();
-	}
+	@Autowired
+	private CacheManager cacheManager;
 
 	/**
 	 * 根据月份分组
@@ -64,7 +62,18 @@ public class ArticleService {
 	}
 
 	/**
-	 * 根据月份查询
+	 * 查询全部列表
+	 * @return
+	 */
+	@Cacheable(key = "0")
+	public List<Article> findAll() {
+		return articleDao.findAll();
+	}
+
+	/**
+	 * 根据年月份查询
+	 * 这里的格式要为 年月
+	 * ps: 201904
 	 * @return
 	 */
 	public List<Article> findByMonth(String month){
@@ -113,6 +122,11 @@ public class ArticleService {
 		return articleDao.findById(id).get();
 	}
 
+	/**
+	 *
+	 * @param num
+	 * @return
+	 */
 	public List<Article> findByVisits(int num) {
 		return articleDao.findByVisits(num);
 	}
@@ -134,7 +148,6 @@ public class ArticleService {
 	 * 修改
 	 * @param article
 	 */
-	@CacheEvict(value = "article",key = "#article.id")
 	public void update(Article article) {
 		article.setUpdateTime(new Date());
 		if(userService.findByUsername(article.getUsername()) ==null){
@@ -173,6 +186,12 @@ public class ArticleService {
 			}
 			channels.addAll(oldChannels);
 		}
+		//将all缓存清除
+		Cache articleCache = cacheManager.getCache("article");
+		if (articleCache.get("0")!=null){
+			articleCache.evict("0");
+			articleCache.evict(article.getId());
+		}
 		articleDao.save(article);
 	}
 
@@ -180,12 +199,17 @@ public class ArticleService {
 	 * 删除
 	 * @param id
 	 */
-	@CacheEvict(value = "article",key = "#id")
 	public void deleteById(String id) {
 		Article byId = findById(id);
 		List<Comment> comment = byId.getComment();
 		for(Comment comment1 : comment){
 			commentService.deleteById(comment1.getId());
+		}
+		//将all缓存清除
+		Cache articleCache = cacheManager.getCache("article");
+		if (articleCache.get("0")!=null){
+			articleCache.evict("0");
+			articleCache.evict(id);
 		}
 		articleDao.deleteById(id);
 	}

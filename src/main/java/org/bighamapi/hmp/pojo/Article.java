@@ -20,11 +20,11 @@ public class Article implements Serializable{
 	@Id
 	private String id;//ID
 
-	@ManyToOne(fetch=FetchType.LAZY)
+	@ManyToOne(fetch=FetchType.EAGER)
     @JsonIgnoreProperties(ignoreUnknown = true, value = {"article"})
 	private Column column;//专栏
 
-	@ManyToMany(cascade = {CascadeType.MERGE,CascadeType.DETACH},fetch=FetchType.LAZY)
+	@ManyToMany(cascade = {CascadeType.MERGE,CascadeType.DETACH},fetch=FetchType.EAGER)
     @JsonIgnoreProperties(ignoreUnknown = true, value = {"article"})
 	private List<Channel> channel;//所属频道
 

@@ -53,13 +53,14 @@
             </div>
         </div>
 
-        <div class="labelBox" th:if="${CommentMax.isEmpty()}">
+        <div class="labelBox" th:if="${!CommentMax.isEmpty()}">
             <div class="gridLabel">
                 访问最多的文章
             </div>
             <div>
                 <div class="rows" th:each="article: ${CommentMax}" :key="index">
                     <a target="_blank" th:href="@{'/article/q/'+${article.id}}">[[${article.title}]]</a>
+                    <span th:text="${article.visits}+次浏览"></span>
                 </div>
             </div>
         </div>
