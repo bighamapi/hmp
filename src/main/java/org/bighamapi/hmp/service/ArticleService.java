@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CacheConfig;
-import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -123,8 +122,8 @@ public class ArticleService {
 	}
 
 	/**
-	 *
-	 * @param num
+	 * 根据文章的点击降序排列
+	 * @param num 返回的数量
 	 * @return
 	 */
 	public List<Article> findByVisits(int num) {
@@ -141,6 +140,7 @@ public class ArticleService {
 		article.setCreateTime(new Date());
 		article.setIsTop("false");
 		article.setUrl("/article/q/"+article.getId());
+//		article.setUsername(userService.findAdmin().getUsername());
 		this.update(article);
 	}
 

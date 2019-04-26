@@ -6,17 +6,6 @@
         <el-form-item label="标题查询" >
             <el-input v-model="searchMap.title" placeholder="输入标题查询"></el-input>
         </el-form-item>
-        <el-form-item label="日期查询" >
-            <el-date-picker
-                    v-model="searchMap.date"
-                    type="daterange"
-                    align="right"
-                    unlink-panels
-                    range-separator="至"
-                    start-placeholder="开始日期"
-                    end-placeholder="结束日期">
-            </el-date-picker>
-        </el-form-item>
         <el-button type="primary" @click="fetchData()">搜索</el-button>
     </el-form>
     <el-table @cell-mouse-enter="cell" @cell-mouse-leave="cell" :data="list" style="width: 100%">
@@ -37,7 +26,7 @@
         </el-table-column>
         <el-table-column align="center" prop="visits" label="浏览数">
         </el-table-column>
-        <el-table-column align="center" prop="date" label="日期">
+        <el-table-column align="center" prop="createDate" label="日期">
         </el-table-column>
     </el-table>
     <el-pagination

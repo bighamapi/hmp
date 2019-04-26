@@ -43,11 +43,9 @@ public class PageInfoService {
 	 * @return
 	 */
 	public PageInfo findById(int id) {
-		//redis
-		PageInfo pageInfo = null;//(Article) redisTemplate.opsForValue().get("article_"+id);
+		PageInfo pageInfo = null;
 		if(pageInfo == null){
 			pageInfo = pageInfoDao.findById(id).get();
-			//redisTemplate.opsForValue().set("article_"+id, article);
 		}
 		return pageInfo;
 	}
@@ -65,4 +63,16 @@ public class PageInfoService {
 		pageInfoDao.save(pageInfo);
 	}
 
+	/**
+	 * 初始化页面信息
+	 * @param pageInfo
+	 */
+	@CacheEvict(value = "pageInfo",key = "0")
+    public void init(PageInfo pageInfo) {
+    	PageInfo info = getInfo();
+    	if (info!=null){
+    		pageInfo.setId(info.getId());
+			pageInfoDao.save(pageInfo);
+		}
+    }
 }

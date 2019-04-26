@@ -18,6 +18,6 @@ import java.util.List;
 public interface CommentDao extends JpaRepository<Comment,String>,JpaSpecificationExecutor<Comment>{
 
     @Modifying
-    @Query(value = "select * from hmp_comment where article_id = ? order by create_time desc",nativeQuery = true)
+    @Query(value = "select * from bjzt_comment where article_id = ? order by create_time desc",nativeQuery = true)
     List<Comment> findByArticleId(String aId);
 }

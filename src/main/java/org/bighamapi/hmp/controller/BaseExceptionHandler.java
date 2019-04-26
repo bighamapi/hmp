@@ -26,6 +26,7 @@ public class BaseExceptionHandler {
     @ExceptionHandler(NullPointerException.class)
     @ResponseBody
     public Result nullPointerExceptionHandler(NullPointerException ex) {
+        ex.printStackTrace();
         LOG.error("空指针异常"+ex.getMessage());
         return new Result(false, StatusCode.ERROR, "执行出错");
     }

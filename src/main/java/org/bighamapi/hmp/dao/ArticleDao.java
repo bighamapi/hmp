@@ -17,12 +17,12 @@ import java.util.Map;
 public interface ArticleDao extends JpaRepository<Article,String>,JpaSpecificationExecutor<Article>{
 
     @Modifying
-    @Query(value = "select * from hmp_article  order by visits DESC limit 0,?",nativeQuery = true)
+    @Query(value = "select * from bjzt_article  order by visits DESC limit 0,?",nativeQuery = true)
     List<Article> findByVisits(int num);
 
     @Modifying
     @Query(value = "select CONCAT(YEAR(create_time),'/',DATE_FORMAT(create_time,'%m')) months, count(id) as total" +
-            " from hmp_article " +
+            " from bjzt_article " +
             "WHERE `create_time` BETWEEN (SELECT min(create_time) from hmp_article) AND now() group by months;",
             nativeQuery = true)
     List<Map<String, String>> groupByDate();
@@ -34,7 +34,7 @@ public interface ArticleDao extends JpaRepository<Article,String>,JpaSpecificati
      * @return
      */
     @Modifying
-    @Query(value = "select * from hmp_article where DATE_FORMAT( create_time, '%Y%m' ) = ? ORDER BY create_time desc",nativeQuery = true)
+    @Query(value = "select * from bjzt_article where DATE_FORMAT( create_time, '%Y%m' ) = ? ORDER BY create_time desc",nativeQuery = true)
     List<Article> findByMonth(String month);
 
 //    @Query(value = "select sum(?) from hmp_article",nativeQuery = true)

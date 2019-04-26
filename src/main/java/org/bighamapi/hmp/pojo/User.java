@@ -7,7 +7,7 @@ import javax.persistence.Table;
 import java.io.Serializable;
 
 @Entity
-@Table(name = "hmp_user")
+@Table(name = "bjzt_user")
 public class User implements Serializable {
     @Id
     //@GeneratedValue

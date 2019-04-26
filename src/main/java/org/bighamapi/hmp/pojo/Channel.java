@@ -8,7 +8,7 @@ import java.util.List;
 
 
 @Entity
-@Table(name="hmp_channel")
+@Table(name="bjzt_channel")
 @JsonIgnoreProperties(ignoreUnknown = true, value =
 {"hibernateLazyInitializer", "handler", "fieldHandler"})
 public class Channel implements Serializable {

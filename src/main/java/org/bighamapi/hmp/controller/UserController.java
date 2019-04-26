@@ -54,8 +54,7 @@ public class UserController {
     }
     @PostMapping()
     public Result add(@RequestBody User user){
-        user.setId(idWorker.nextId()+"");
-        userService.save(user);
+        userService.newUser(user);
         return new Result(true, StatusCode.OK , "请求成功");
     }
     /**

@@ -13,7 +13,7 @@ import java.util.List;
  *
  */
 @Entity
-@Table(name="hmp_column")
+@Table(name="bjzt_column")
 @JsonIgnoreProperties(ignoreUnknown = true, value =
         {"hibernateLazyInitializer", "handler", "fieldHandler"})
 public class Column implements Serializable{

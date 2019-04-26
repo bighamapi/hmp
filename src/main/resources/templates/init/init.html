@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>欢迎来到HMP博客</title>
+    <!-- Bootstrap core CSS-->
+    <link href="/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom fonts for this template-->
+    <link href="/vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <!-- Custom styles for this template-->
+    <link href="/css/sb-admin.css" rel="stylesheet">
+</head>
+
+<body class="bg-dark">
+<div class="container">
+    <div class="card card-register mx-auto mt-5">
+        <div class="card-header">欢迎使用ZTBlog   博客的基本信息设置</div>
+        <div class="card-body">
+            <form>
+                <div class="form-group">
+                    <div class="form-row">
+                        <div class="col-md-6">
+                            <label for="username">* 初始化您的用户名</label>
+                            <input class="form-control" id="username" type="text" placeholder="username">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="password">* 初始化您的密码</label>
+                            <input class="form-control" id="password" type="password" placeholder="Password">
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <form>
+                <div class="form-group">
+                    <div class="form-row">
+                        <div class="col-md-6">
+                            <label for="blogName">* 博客标题</label>
+                            <input class="form-control" id="blogName" type="text" aria-describedby="nameHelp" placeholder="输入你的博客名">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="blog2Name">博客子标题</label>
+                            <input class="form-control" id="blog2Name" type="text" aria-describedby="nameHelp" placeholder="输入你的子标题">
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="notice">公告</label>
+                    <input class="form-control" id="notice" type="text" placeholder="公告">
+                </div>
+                <div class="form-group">
+                    <label for="footer">页脚信息</label>
+                    <input class="form-control" id="footer" type="text" placeholder="页脚信息">
+                </div>
+                <a class="btn btn-primary btn-block" id="init">确定配置</a>
+            </form>
+    </div>
+</div>
+<!-- Bootstrap core JavaScript-->
+<script src="/vendor/jquery/jquery.min.js"></script>
+<script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<!-- Core plugin JavaScript-->
+<script src="/vendor/jquery-easing/jquery.easing.min.js"></script>
+<script>
+    $("#init").click(function () {
+        var username = $("#username").val();
+        var password = $("#password").val();
+        if (username==null || username ==""){
+            //用户名不能为空
+            return;
+        }
+        if (password==null || password ==""){
+            //密码不能为空
+            return;
+        }
+        var title = $("#blogName").val();
+        var toTitle = $("#blog2Name").val();
+        var notice = $("#notice").val();
+        var footer = $("#footer").val();
+        if (title==null || title ==""){
+            //标题不能为空
+            return;
+        }
+        var user = {
+            username: username,
+            password: password
+        }
+        var pageInfo = {
+            title: title,
+            toTitle: toTitle ,
+            notice: notice,
+            footer: footer
+        }
+        $.ajax({
+            url:"/init",
+            type:"POST",
+            dataType:"json",
+            contentType: "application/json; charset=utf-8",
+            data:JSON.stringify({
+                user: user,
+                pageInfo: pageInfo
+            }),
+            success:function (res) {
+                if (res.code==20000){
+                    window.location.href="/"
+                }
+            }
+        })
+    })
+</script>
+</body>
+
+</html>
