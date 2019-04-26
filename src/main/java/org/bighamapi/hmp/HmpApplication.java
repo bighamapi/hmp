@@ -3,7 +3,6 @@ package org.bighamapi.hmp;
 import org.bighamapi.hmp.dto.RSSFeedViewer;
 import org.bighamapi.hmp.interceptor.HmpInterceptor;
 import org.bighamapi.hmp.util.IdWorker;
-import org.bighamapi.hmp.util.JwtUtil;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cache.annotation.EnableCaching;
@@ -20,10 +19,6 @@ public class HmpApplication {
     @Bean
     public IdWorker idWorker(){
         return new IdWorker(1,1);
-    }
-    @Bean
-    public JwtUtil jwtUtil(){
-        return new JwtUtil();
     }
     @Bean
     public HmpInterceptor hmpInterceptor(){

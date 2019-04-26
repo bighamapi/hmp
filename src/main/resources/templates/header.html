@@ -121,10 +121,16 @@
             <a class="label button" href="/rss"><span class="glyphicon glyphicon-signal" ></span>RSS</a>
 
             <div id="search">
-                <input type="text" placeholder="搜索" /><button></button>
+                <input id="searchText" type="text" placeholder="搜索" /><button onclick="search()"></button>
             </div>
         </div>
     </div>
 </header>
 </body>
+<script>
+    function search(){
+        var search = document.getElementById("searchText").value;
+        window.location.href="/search/"+search;
+    }
+</script>
 </html>

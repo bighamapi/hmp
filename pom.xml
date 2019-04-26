@@ -68,17 +68,24 @@
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-entitymanager</artifactId>
         </dependency>
-        <!--引入JWT包-->
-        <dependency>
-            <groupId>io.jsonwebtoken</groupId>
-            <artifactId>jjwt</artifactId>
-            <version>0.6.0</version>
-        </dependency>
         <!-- rss依赖 -->
         <dependency>
             <groupId>com.rometools</groupId>
             <artifactId>rome</artifactId>
             <version>1.8.0</version>
+        </dependency>
+        <!-- ik.中文分词器依赖-->
+        <!-- https://mvnrepository.com/artifact/com.github.magese/ik-analyzer -->
+        <dependency>
+            <groupId>com.github.magese</groupId>
+            <artifactId>ik-analyzer</artifactId>
+            <version>7.4.0</version>
+        </dependency>
+        <!-- lucene依赖 -->
+        <dependency>
+            <groupId>org.apache.lucene</groupId>
+            <artifactId>lucene-highlighter</artifactId>
+            <version>7.2.1</version>
         </dependency>
     </dependencies>
 

@@ -16,12 +16,10 @@ public class Channel implements Serializable {
     @Id
     private String id;//ID
 
-    @ManyToMany(cascade = CascadeType.DETACH,fetch=FetchType.EAGER,mappedBy = "channel")
-    @JsonIgnoreProperties(ignoreUnknown = true, value = {"channel"})
+    @ManyToMany(cascade = CascadeType.DETACH,mappedBy = "channel",fetch=FetchType.EAGER)
+    @JsonIgnoreProperties(ignoreUnknown = true, value = {"channel","column","comment"})//屏蔽其它属性
     private List<Article> article;
     private String name;//频道名称
-    private String state;//状态
-
 
     public List<Article> getArticle() {
         return article;
@@ -45,10 +43,11 @@ public class Channel implements Serializable {
         this.name = name;
     }
 
-    public String getState() {
-        return state;
-    }
-    public void setState(String state) {
-        this.state = state;
+    @Override
+    public String toString() {
+        return "Channel{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                '}';
     }
 }

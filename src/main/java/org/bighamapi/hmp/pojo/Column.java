@@ -22,7 +22,7 @@ public class Column implements Serializable{
     private String id;//ID
 
     @OneToMany(cascade = CascadeType.DETACH , mappedBy = "column",fetch=FetchType.EAGER)
-    @JsonIgnoreProperties(ignoreUnknown = true, value = {"column","comment"})
+    @JsonIgnoreProperties(ignoreUnknown = true, value = {"column","comment","channel"})
     private List<Article> article;
 
 	private String name;//专栏名称

@@ -182,7 +182,7 @@ public class Article implements Serializable{
 				", visits=" + visits +
 				", comments=" + comments +
 				", url='" + url + '\'' +
-				", comment=" + comment +
+//				", comment=" + comment +
 				'}';
 	}
 }

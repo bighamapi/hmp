@@ -21,7 +21,7 @@ public class Comment implements Serializable {
     private String email;
     private String nickname;
     @ManyToOne
-    @JsonIgnoreProperties(ignoreUnknown = true, value = {"comment"})
+    @JsonIgnoreProperties(ignoreUnknown = true, value = {"comment","column","channel"})
     private Article article;
 
     private String parentId;//上级ID
