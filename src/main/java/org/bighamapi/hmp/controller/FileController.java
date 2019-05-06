@@ -32,8 +32,10 @@ public class FileController {
         try {
             newFile = File.createTempFile("tmp", null);
             file.transferTo(newFile);
-            newFile.deleteOnExit();
             String url = QCOSUtil.uploadFile(newFile, name);
+
+            newFile.deleteOnExit();
+
             System.out.println(url);
             Map<String,Object> data = new HashMap<>();
             data.put("file",fileName);

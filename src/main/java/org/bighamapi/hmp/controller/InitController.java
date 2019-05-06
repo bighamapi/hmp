@@ -63,13 +63,13 @@ public class InitController {
         //生成第一篇文章
         Article article = new Article();
         article.setTitle("hello world");
-
         ArrayList<Channel> channels = new ArrayList<>();
         Channel channel = new Channel();
         channel.setName("hello");
         article.setChannel(channels);
         article.setContent("hello world");
         article.setSummary("hello world");
+        article.setIsPublic("true");
         article.setUsername(user.getUsername());
         articleService.add(article);
 

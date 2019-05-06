@@ -64,7 +64,6 @@
                  * 添加文章
                  */
                 addArticle(flag){
-                    this.article.username = "admin"
                     this.vditor.getHTML().then(res =>{
                         vue.article.content = res
                         console.log(res)
@@ -86,7 +85,10 @@
                         this.article.channel[i].name = channels[i]
                     }
                     this.article.isPublic=flag
-                    this.article.column.name = this.column
+                    console.log(this.column)
+                    if (this.column !=""){
+                        this.article.column.name = this.column
+                    }
                     if([[${article}]]){
                         axios.put('/article/'+[[${article!=null? article.id: "" }]],this.article).then(function (response){
                             if(response.data.code==20000){
@@ -196,7 +198,9 @@
                        }
                        vue.channel+=vue.article.channel[i].name +","
                    }
-                    this.column = vue.article.column.name
+               if (vue.article.column !=null){
+                   this.column = vue.article.column.name
+               }
                })
 
 
