@@ -66,9 +66,7 @@
                 addArticle(flag){
                     this.vditor.getHTML().then(res =>{
                         vue.article.content = res
-                        console.log(res)
                         vue.summary.getHTML().then(res=>{
-                            console.log(res)
                             vue.article.summary = res
                             vue.submit(flag)
                             console.log(vue.article)
@@ -82,14 +80,18 @@
 
                     for(let i =0 ;i<channels.length;i++){
                         this.article.channel[i] = {}
-                        this.article.channel[i].name = channels[i]
+                        if (channels[i] !="") {
+                            this.article.channel[i].name = channels[i]
+                        }else{
+                            this.article.channel[i].name = "未分类"
+                        }
                     }
                     this.article.isPublic=flag
                     console.log(this.column)
                     if (this.column !=""){
                         this.article.column.name = this.column
                     }
-                    if([[${article}]]){
+                    if([[${article}]]){     //如果是修改
                         axios.put('/article/'+[[${article!=null? article.id: "" }]],this.article).then(function (response){
                             if(response.data.code==20000){
                                 vue.open(response.data.message,"success")

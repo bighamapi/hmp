@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -46,8 +47,6 @@ public class ArticleService {
 	private ColumnService columnService;
 	@Autowired
 	private CommentService commentService;
-	@Autowired
-	private CacheManager cacheManager;
 
 	/**
 	 * 根据月份分组
@@ -64,7 +63,6 @@ public class ArticleService {
 	 * 查询全部列表
 	 * @return
 	 */
-	@Cacheable(key = "0")
 	public List<Article> findAll() {
 		return articleDao.findAll();
 	}
@@ -139,8 +137,8 @@ public class ArticleService {
 		article.setComments(0);
 		article.setCreateTime(new Date());
 		article.setIsTop("false");
+		article.setUsername(userService.findAdmin().getUsername());
 		article.setUrl("/article/q/"+article.getId());
-//		article.setUsername(userService.findAdmin().getUsername());
 		this.update(article);
 	}
 
@@ -148,6 +146,7 @@ public class ArticleService {
 	 * 修改
 	 * @param article
 	 */
+	@CacheEvict(key = "#article.id")
 	public void update(Article article) {
 		article.setUpdateTime(new Date());
 		if(userService.findByUsername(article.getUsername()) ==null){
@@ -186,12 +185,6 @@ public class ArticleService {
 			}
 			channels.addAll(oldChannels);
 		}
-		//将all缓存清除
-		Cache articleCache = cacheManager.getCache("article");
-		if (articleCache.get("0")!=null){
-			articleCache.evict("0");
-			articleCache.evict(article.getId());
-		}
 		articleDao.save(article);
 	}
 
@@ -199,17 +192,12 @@ public class ArticleService {
 	 * 删除
 	 * @param id
 	 */
+	@CacheEvict(key = "#id")
 	public void deleteById(String id) {
 		Article byId = findById(id);
 		List<Comment> comment = byId.getComment();
 		for(Comment comment1 : comment){
 			commentService.deleteById(comment1.getId());
-		}
-		//将all缓存清除
-		Cache articleCache = cacheManager.getCache("article");
-		if (articleCache.get("0")!=null){
-			articleCache.evict("0");
-			articleCache.evict(id);
 		}
 		articleDao.deleteById(id);
 	}

@@ -1,5 +1,5 @@
 server:
-  port: 8080
+  port: 8079
 spring:
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
@@ -14,9 +14,6 @@ spring:
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect  #不加这句则默认为MyISAM引擎
   thymeleaf:
     #开发阶段，建议关闭thymeleaf的缓存 false
-    cache: true
-    #使用遗留的html5以去掉对html标签的校验
-    mode: LEGACYHTML5
-logging:
-  file: zt_Blog_log.log
-  path: data/log/
+      cache: true
+      #使用遗留的html5以去掉对html标签的校验
+      mode: LEGACYHTML5

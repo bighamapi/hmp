@@ -72,15 +72,15 @@
                         type: 'warning'
                     }).then(() => {//确认
                         axios.delete(`/comment/${id}`).then(response=>{
-                            if(response.code==20000){
+                            if(response.data.code==20000){
                                 this.$message({
-                                    message: response.message,
+                                    message: response.data.message,
                                     type: "success"
                                 });
                                 this.fetchData()
                             }else{
                                 this.$message({
-                                    message: response.message,
+                                    message: response.data.message,
                                     type: "error"
                                 });
                             }

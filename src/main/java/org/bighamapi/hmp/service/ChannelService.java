@@ -39,14 +39,10 @@ public class ChannelService {
 	
 	@Autowired
 	private IdWorker idWorker;
-	@Autowired
-	private CacheManager cacheManager;
-
 	/**
 	 * 查询全部列表
 	 * @return
 	 */
-	@Cacheable(key = "0")
 	public List<Channel> findAll() {
 		return channelDao.findAll();
 	}
@@ -93,25 +89,15 @@ public class ChannelService {
 	public void add(Channel channel) {
 		channel.setId( idWorker.nextId()+"" );
 		channelDao.save(channel);
-		//将all缓存清除
-		Cache cache = cacheManager.getCache("article");
-		if (cache.get("0")!=null){
-			cache.evict("0");
-		}
 	}
 
 	/**
 	 * 修改
 	 * @param channel
 	 */
+	@CacheEvict(key = "#channel.id")
 	public void update(Channel channel) {
 		channelDao.save(channel);
-		//将all缓存清除
-		Cache cache = cacheManager.getCache("article");
-		if (cache.get("0")!=null){
-			cache.evict("0");
-			cache.evict(channel.getId());
-		}
 	}
 
 	/**
@@ -121,11 +107,6 @@ public class ChannelService {
 	@CacheEvict(key = "#id")
 	public void deleteById(String id) {
 		channelDao.deleteById(id);
-		//将all缓存清除
-		Cache cache = cacheManager.getCache("article");
-		if (cache.get("all")!=null){
-			cache.evict("all");
-		}
 	}
 
 	/**

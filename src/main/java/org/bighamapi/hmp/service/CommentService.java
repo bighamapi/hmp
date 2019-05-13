@@ -41,14 +41,11 @@ public class CommentService {
 	
 	@Autowired
 	private IdWorker idWorker;
-	@Autowired
-	private CacheManager cacheManager;
 
 	/**
 	 * 查询全部列表
 	 * @return
 	 */
-	@Cacheable(key = "0")
 	public List<Comment> findAll() {
 		return commentDao.findAll();
 	}
@@ -103,6 +100,7 @@ public class CommentService {
 	 * 增加
 	 * @param comment
 	 */
+	@CacheEvict(key = "#comment.article.id")
 	public void add(Comment comment) {
 		if (comment.getEmail()==null){
 			throw new RuntimeException("没有权限！");
@@ -111,40 +109,24 @@ public class CommentService {
 		comment.setCreateTime(new Date());
 
 		commentDao.save(comment);
-		//将all缓存清除
-		Cache cache = cacheManager.getCache("article");
-		if (cache.get("0")!=null){
-			cache.evict("0");
-			cache.evict(comment.getArticle().getId());
-		}
 	}
 
 	/**
 	 * 修改
 	 * @param comment
 	 */
+	@CacheEvict(key = "#comment.id")
 	public void update(Comment comment) {
 		commentDao.save(comment);
-		//将all缓存清除
-		Cache cache = cacheManager.getCache("article");
-		if (cache.get("0")!=null){
-			cache.evict("0");
-			cache.evict(comment.getId());
-		}
 	}
 
 	/**
 	 * 删除
 	 * @param id
 	 */
+	@CacheEvict(key = "#id")
 	public void deleteById(String id) {
 		commentDao.deleteById(id);
-		//将all缓存清除
-		Cache cache = cacheManager.getCache("article");
-		if (cache.get("0")!=null){
-			cache.evict("0");
-			cache.evict(id);
-		}
 	}
 
 	/**

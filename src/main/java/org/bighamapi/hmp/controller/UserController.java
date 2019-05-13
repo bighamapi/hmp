@@ -49,6 +49,7 @@ public class UserController {
 
         HttpSession session = request.getSession();
         session.setAttribute("user", user1);
+        session.setMaxInactiveInterval(-1);
         LOG.info("登陆成功");
         return new Result(true, StatusCode.OK , "请求成功");
     }

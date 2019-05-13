@@ -23,7 +23,7 @@ public interface ArticleDao extends JpaRepository<Article,String>,JpaSpecificati
     @Modifying
     @Query(value = "select CONCAT(YEAR(create_time),'/',DATE_FORMAT(create_time,'%m')) months, count(id) as total" +
             " from bjzt_article " +
-            "WHERE `create_time` BETWEEN (SELECT min(create_time) from hmp_article) AND now() group by months;",
+            "WHERE `create_time` BETWEEN (SELECT min(create_time) from bjzt_article) AND now() group by months;",
             nativeQuery = true)
     List<Map<String, String>> groupByDate();
 

@@ -67,10 +67,12 @@
         var username = $("#username").val();
         var password = $("#password").val();
         if (username==null || username ==""){
+            alert("用户名不能为空")
             //用户名不能为空
             return;
         }
         if (password==null || password ==""){
+            alert("密码不能为空")
             //密码不能为空
             return;
         }
@@ -79,6 +81,7 @@
         var notice = $("#notice").val();
         var footer = $("#footer").val();
         if (title==null || title ==""){
+            alert("标题不能为空")
             //标题不能为空
             return;
         }

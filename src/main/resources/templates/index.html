@@ -8,11 +8,10 @@
                 </div>
                 <div class="text vditor-reset" th:utext="${article.summary}">
                 </div>
-                <div>
+                <div th:if="${!article.channel.isEmpty()}">
                 <a th:href="@{'/channel/q/'+${c.id}}" class="channel"
                       style="border: none;background-color: #bbb;color:#eee;"
-                      th:each="c: ${article.channel}" >
-                    #[[${c.name}]]
+                      th:each="c: ${article.channel}" th:text="'#'+${c.name}">
                 </a>
                 </div>
             </div>
