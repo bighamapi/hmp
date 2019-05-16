@@ -1,5 +1,26 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+<link href="/css/admin.css" rel="stylesheet">
+<link href="/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+<!-- Custom fonts for this template-->
+<link href="/vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+<!-- Custom styles for this template-->
+<link href="/css/sb-admin.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+<!-- 引入样式 -->
+<link href="https://cdn.bootcss.com/element-ui/2.7.2/theme-chalk/index.css" rel="stylesheet">
+<!-- 引入组件库 -->
+<script src="https://cdn.bootcss.com/element-ui/2.7.2/index.js"></script>
+<div class="container-fluid">
+    <!-- Breadcrumbs-->
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+            <a href="#">首页</a>
+        </li>
+        <li class="breadcrumb-item active">文章发布</li>
+    </ol>
+</div>
+<div class="card mb-3">
 <div id="article" class="box" th:fragment="article">
     <div>
         <div class="label">标题:</div>
@@ -208,5 +229,6 @@
 
            }
     </script>
+</div>
 </div>
 </html>

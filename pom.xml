@@ -87,6 +87,12 @@
             <artifactId>lucene-highlighter</artifactId>
             <version>7.2.1</version>
         </dependency>
+        <!-- 热更新 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-devtools</artifactId>
+            <optional>true</optional>
+        </dependency>
     </dependencies>
 
     <build>

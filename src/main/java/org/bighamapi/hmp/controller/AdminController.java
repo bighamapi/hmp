@@ -44,12 +44,13 @@ public class AdminController {
     //主页
     @GetMapping
     public String admin(Model model){
-        Map<String,String> html = new HashMap<>();
-        html.put("file","admin/index");
-        html.put("name","index");
-        model.addAttribute("html",html);
         model.addAttribute("articles",articleService.findByVisits(3));
         return "admin/template";
+    }
+    @GetMapping("/index")
+    public String index(Model model){
+        model.addAttribute("articles",articleService.findByVisits(3));
+        return "admin/index";
     }
     //文章发布和更新
     @RequestMapping(value = {"/article/{id}", "/article"},method = RequestMethod.GET)
@@ -57,94 +58,49 @@ public class AdminController {
         if(id !=null){
             model.addAttribute("article",articleService.findById(id));
         }
-        Map<String,String> html = new HashMap<>();
-        html.put("file","admin/article");
-        html.put("name","article");
-        model.addAttribute("html",html);
-        model.addAttribute("pageName","文章发布");
         model.addAttribute("columns",columnService.findAll());
-        return "admin/template";
+        return "admin/article";
     }
     //文章管理
     @GetMapping("/articleManage")
     public String articleMange(Model model){
-        Map<String,String> html = new HashMap<>();
-        html.put("file","admin/articleManage");
-        html.put("name","articleManage");
-        model.addAttribute("html",html);
-
         model.addAttribute("pageName","文章管理");
         model.addAttribute("isPublic",true);
-        return "admin/template";
+        return "admin/articleManage";
     }
     //草稿箱
     @GetMapping("/tempArticle")
     public String tempArticle(Model model) {
-        Map<String, String> html = new HashMap<>();
-        html.put("file", "admin/articleManage");
-        html.put("name", "articleManage");
-        model.addAttribute("html", html);
-
         model.addAttribute("pageName","草稿箱");
         model.addAttribute("isPublic",false);
-        return "admin/template";
+        return "admin/articleManage";
     }
 
     //评论管理
     @GetMapping("/comment")
-    public String comment(Model model) {
-        Map<String, String> html = new HashMap<>();
-        html.put("file", "admin/comment");
-        html.put("name", "comment");
-        model.addAttribute("html", html);
-
-        model.addAttribute("pageName","评论管理");
-        return "admin/template";
+    public String comment() {
+        return "admin/comment";
     }
     //专栏管理
     @GetMapping("/column")
-    public String column(Model model) {
-        Map<String, String> html = new HashMap<>();
-        html.put("file", "admin/column");
-        html.put("name", "column");
-        model.addAttribute("html", html);
-
-        model.addAttribute("pageName","专栏管理");
-        return "admin/template";
+    public String column() {
+        return "admin/column";
     }
     //页面设计
     @GetMapping("/pageManage")
-    public String pageInfo(Model model) {
-        Map<String, String> html = new HashMap<>();
-        html.put("file", "admin/pageManage");
-        html.put("name", "pageFrom");
-        model.addAttribute("html", html);
-
-        model.addAttribute("pageName","页面设计");
-        return "admin/template";
+    public String pageInfo() {
+        return "admin/pageManage";
     }
     //密码管理
     @GetMapping("/password")
     public String password(Model model) {
-        Map<String, String> html = new HashMap<>();
-        html.put("file", "admin/password");
-        html.put("name", "password");
-        model.addAttribute("html", html);
-
-        model.addAttribute("pageName","修改密码");
         model.addAttribute("user",userService.findAdmin());
-        return "admin/template";
+        return "admin/password";
     }
     //链接管理
     @GetMapping("/link")
     public String link(Model model) {
-        Map<String, String> html = new HashMap<>();
-        html.put("file", "admin/link");
-        html.put("name", "link");
-        model.addAttribute("html", html);
-
-        model.addAttribute("pageName","链接管理");
         model.addAttribute("link",linkService.findAll());
-        return "admin/template";
+        return "admin/link";
     }
 }

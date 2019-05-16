@@ -16,11 +16,7 @@
   <link href="/css/sb-admin.css" rel="stylesheet">
   <link href="/css/admin.css" rel="stylesheet">
 
-  <script src="https://cdn.jsdelivr.net/npm/vue"></script>
-  <!-- 引入样式 -->
-  <link href="https://cdn.bootcss.com/element-ui/2.7.2/theme-chalk/index.css" rel="stylesheet">
-  <!-- 引入组件库 -->
-  <script src="https://cdn.bootcss.com/element-ui/2.7.2/index.js"></script>
+
 </head>
 
 <body class="fixed-nav sticky-footer bg-dark" id="page-top">
@@ -33,7 +29,7 @@
     <div class="collapse navbar-collapse" id="navbarResponsive">
       <ul class="navbar-nav navbar-sidenav" id="exampleAccordion">
         <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Dashboard">
-          <a class="nav-link" href="/admin">
+          <a class="nav-link" href="/admin/index" target="iframe">
             <i class="fa fa-fw fa-area-chart"></i>
             <span class="nav-link-text">首页</span>
           </a>
@@ -45,18 +41,18 @@
           </a>
           <ul class="sidenav-second-level collapse" id="collapseComponents">
             <li>
-              <a href="/admin/article">发布文章</a>
+              <a href="/admin/article" target="iframe">发布文章</a>
             </li>
             <li>
-              <a href="/admin/articleManage">文章管理</a>
+              <a href="/admin/articleManage" target="iframe">文章管理</a>
             </li>
             <li>
-              <a href="/admin/tempArticle">草稿箱</a>
+              <a href="/admin/tempArticle" target="iframe">草稿箱</a>
             </li>
           </ul>
         </li>
         <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Charts">
-          <a class="nav-link" href="/admin/comment">
+          <a class="nav-link" href="/admin/comment" target="iframe">
             <i class="fa fa-fw fa-dashboard"></i>
             <span class="nav-link-text">评论管理</span>
           </a>
@@ -68,24 +64,24 @@
           </a>
           <ul class="sidenav-second-level collapse" id="collapseExamplePages">
             <li>
-              <a href="/admin/pageManage">页面设计</a>
+              <a href="/admin/pageManage" target="iframe">页面设计</a>
             </li>
             <li>
-              <a href="/admin/column">专栏管理</a>
+              <a href="/admin/column" target="iframe">专栏管理</a>
             </li>
             <li>
-              <a href="/admin/link">链接管理</a>
+              <a href="/admin/link" target="iframe">链接管理</a>
             </li>
             <li>
-              <a href="/admin/password">更改密码</a>
+              <a href="/admin/password" target="iframe">更改密码</a>
             </li>
             <li>
-              <a href="">数据备份</a>
+              <a href="/admin/info" target="iframe">数据备份</a>
             </li>
           </ul>
         </li>
         <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Link">
-          <a class="nav-link" href="">
+          <a class="nav-link" target="iframe" href="https://github.com/bjzt/bjzt">
             <i class="fa fa-fw fa-link"></i>
             <span class="nav-link-text">关于</span>
           </a>
@@ -107,19 +103,7 @@
     </div>
   </nav>
   <div class="content-wrapper">
-    <div class="container-fluid">
-      <!-- Breadcrumbs-->
-      <ol class="breadcrumb">
-        <li class="breadcrumb-item">
-          <a href="#">首页</a>
-        </li>
-        <li class="breadcrumb-item active" th:if="${pageName != null}">[[${pageName}]]</li>
-      </ol>
-    </div>
-
-    <div class="card mb-3">
-      <div th:replace="${html.file}::${html.name}"></div>
-    </div>
+    <iframe style="width: 100%" id="iframe" name="iframe" onLoad="changeFrameHeight()" frameborder="0" scrolling="no" src="/admin/index"></iframe>
   </div>
     <!-- /.container-fluid-->
     <!-- /.content-wrapper-->
@@ -175,6 +159,13 @@
           }
         })
       })
+      function changeFrameHeight(){
+        var ifm= document.getElementById("iframe");
+        var subWeb = document.frames ? document.frames["iframe"].document : ifm.contentDocument
+          ifm.height = subWeb.body.scrollHeight+50;
+        console.log(ifm.height)
+      }
+      window.onresize=function(){ changeFrameHeight();}
     </script>
   </div>
 </body>
