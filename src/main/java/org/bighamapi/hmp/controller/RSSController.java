@@ -1,11 +1,9 @@
 package org.bighamapi.hmp.controller;
 
-import org.bighamapi.hmp.dto.PageInfo;
 import org.bighamapi.hmp.dto.RSSFeedViewer;
 import org.bighamapi.hmp.dto.RSSMessage;
 import org.bighamapi.hmp.pojo.Article;
 import org.bighamapi.hmp.service.ArticleService;
-import org.bighamapi.hmp.service.PageInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,7 +26,7 @@ public class RSSController {
 
     @RequestMapping(value="/rss", method = RequestMethod.GET)
     public ModelAndView getFeedInRss(ModelAndView mav, HttpServletRequest request) {
-
+        //得到当前域名/ip
         String contextPath = request.getRequestURL().substring(0,request.getRequestURL().indexOf(request.getRequestURI()));
 
         List<RSSMessage> items = new ArrayList<>();

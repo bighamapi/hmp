@@ -1,8 +1,5 @@
 package org.bighamapi.hmp.dto;
 
-import java.io.FileOutputStream;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -10,7 +7,6 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.rometools.rome.io.SyndFeedOutput;
 import org.bighamapi.hmp.service.PageInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.view.feed.AbstractRssFeedView;
@@ -23,37 +19,37 @@ public class RSSFeedViewer extends AbstractRssFeedView {
 
     @Autowired
     private PageInfoService pageInfoService;
-   @Override
-   protected void buildFeedMetadata(Map<String, Object> model, Channel feed, HttpServletRequest request) {
-       PageInfo info = pageInfoService.getInfo();
-       feed.setTitle(info.getTitle());
-       feed.setDescription(info.getToTitle());
-       feed.setLink(request.getRequestURL().substring(0,request.getRequestURL().indexOf(request.getRequestURI())));
 
-      super.buildFeedMetadata(model, feed, request);
-   }
+    @Override
+    protected void buildFeedMetadata(Map<String, Object> model, Channel feed, HttpServletRequest request) {
+         PageInfo info = pageInfoService.getInfo();
+         feed.setTitle(info.getTitle());
+         feed.setDescription(info.getToTitle());
+         feed.setLink(request.getRequestURL().substring(0,request.getRequestURL().indexOf(request.getRequestURI())));
 
-   @Override
-   protected List<Item> buildFeedItems(Map<String, Object> model, HttpServletRequest request, HttpServletResponse response) throws Exception {
-   
-      List<RSSMessage> listContent = (List<RSSMessage>) model.get("feedContent");
-      List<Item> items = new ArrayList<>(listContent.size());
+         super.buildFeedMetadata(model, feed, request);
+    }
 
-      for(RSSMessage tempContent : listContent ){
+    @Override
+    protected List<Item> buildFeedItems(Map<String, Object> model, HttpServletRequest request, HttpServletResponse response) throws Exception {
+         List<RSSMessage> listContent = (List<RSSMessage>) model.get("feedContent");
+         List<Item> items = new ArrayList<>(listContent.size());
 
-         Item item = new Item();
+         for(RSSMessage tempContent : listContent ){
 
-         Content content = new Content();
-         content.setValue(tempContent.getSummary());
-         item.setContent(content);
+              Item item = new Item();
 
-         item.setTitle(tempContent.getTitle());
-         item.setLink(tempContent.getUrl());
-         item.setPubDate(tempContent.getCreatedDate());
+              Content content = new Content();
+              content.setValue(tempContent.getSummary());
+              item.setContent(content);
 
-         items.add(item);
-      }
-       response.setCharacterEncoding("UTF-8");
-      return items;
-   }
+              item.setTitle(tempContent.getTitle());
+              item.setLink(tempContent.getUrl());
+              item.setPubDate(tempContent.getCreatedDate());
+
+              items.add(item);
+         }
+         response.setCharacterEncoding("UTF-8");
+         return items;
+    }
 }

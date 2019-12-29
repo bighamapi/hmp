@@ -34,19 +34,14 @@ public class LuceneSearchUtil{
      * @throws Exception
      */
     public static List<String> SearchResultsId(IndexSearcher searcher, ScoreDoc[] hits) throws Exception {
-//        System.out.println("找到 " + hits.length + " 个命中.");
-//        System.out.println("序号\t匹配度得分\t结果");
         List<String> ids = new ArrayList<>();
         for (int i = 0; i < hits.length; ++i) {
             ScoreDoc scoreDoc= hits[i];
             int docId = scoreDoc.doc;
             Document d = searcher.doc(docId);
             List<IndexableField> fields = d.getFields();//返回结果集类似ResultSet
-//            System.out.print((i + 1) );
-//            System.out.print("\t" + scoreDoc.score);//匹配度得分
             for (IndexableField f : fields) {
                 if("id".equals(f.name())){
-//                    System.out.print("id: "+f.stringValue());
                     ids.add(f.stringValue());
                     break;
                 }

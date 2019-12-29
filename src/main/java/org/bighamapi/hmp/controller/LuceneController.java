@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Controller
 public class LuceneController {
@@ -59,15 +60,14 @@ public class LuceneController {
         //第一个参数是查询对象，第二个参数是查询结果返回的最大值
         ScoreDoc[] hits = searcher.search(query, 10).scoreDocs;
 
-        List<Article> articles = new ArrayList<>();
         // 5. 显示查询结果
         List<String> ids = LuceneSearchUtil.SearchResultsId(searcher, hits);
-        for (String id: ids ) {
-            Article byId = articleService.findById(id);
-            articles.add(byId);
-        }
+        //根据ids找到文章list
+        List<Article> articles = ids.stream().map(id -> articleService.findById(id)).collect(Collectors.toList());
+
         // 6. 关闭查询
         reader.close();
+        //themaleaf所需要的值
         Map<String,Object> map = new HashMap<>();
         map.put("articleTotal",articleService.count());
         map.put("commentTotal",commentService.count());
